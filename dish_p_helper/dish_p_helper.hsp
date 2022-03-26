@@ -2,7 +2,7 @@
 ;
 ; Dish P Helper
 ;
-; Ver 1.9
+; Ver 2.0
 ;
 ; HSP3Dish Helper用 プロジェクト補助アプリケーション
 ;
@@ -22,7 +22,7 @@
 
 #include "hspext.as"
 #include "encode.as"
-#include "l_dialogex.as"
+#include "shell32.as"
 
 #uselib "ImageHlp.dll"
 #func global MakeSureDirectoryPathExists		"MakeSureDirectoryPathExists" sptr
@@ -33,7 +33,7 @@
 #const WINDOW_HEIGHT							480
 
 #define APPLICATION_TITLE						"Dish P Helper"
-#define APPLICATION_VER							"Ver 1.9"
+#define APPLICATION_VER							"Ver 2.0"
 
 #define CONFIG_FILE_NAME						"dish_p_helper_dat.ini"
 #define CONFIG_WINDOW_POS_X						"#window_pos_x="
@@ -88,7 +88,7 @@
 #const POS_X_APPLICATION_ID_2					18
 #const POS_Y_APPLICATION_ID_2					18
 
-
+#define HSP3DISH_INI							"hsp3dish.ini"
 
 #define FILE_NAME_ANDROID_MANIFEST_XML			"src\\main\\AndroidManifest.xml"
 #define FILE_NAME_MAIN_C						"jni\\main.c"
@@ -1503,23 +1503,31 @@
 ;-----------------------------------------------------------------------
 *hsp3dish_ini_write
 
-	dialogEx 1, "HSP3Dish用Windows上画面サイズファイル", "hsp3dish.ini", "HSP3Dish用Windows上画面サイズファイル(hsp3dish.ini)を出力する", ""
-
-	if stat == TRUE {
+	dim bi, 8
+	sdim sztmp, $206
+	ttl	= HSP3DISH_INI + "を保存するフォルダを選択"
+	bi	= 0, 0, varptr(sztmp), varptr(ttl), 1, 0, 0, 0
+	SHBrowseForFolder varptr(bi)
+	idl = stat
+	SHGetPathFromIDList idl, varptr(sztmp)
+	
+	if stat {
+		cur_dir = dir_cur
+		chdir sztmp
 
 		save_buff  = ""
 		save_buff += "; hsp3dish settings\n"
 		save_buff += "wx=" + hgio_view_width + "\n"
 		save_buff += "wy=" + hgio_view_height + "\n"
 
-		notesel save_buff
-		notesave refstr
-		noteunsel
+		bsave HSP3DISH_INI, save_buff, strlen(save_buff)
 
+		chdir cur_dir
+
+		dialog sztmp + "\nに " + HSP3DISH_INI + " を出力しました。", 0, "出力完了"
 	}
 
 	return
-
 
 ;-----------------------------------------------------------------------
 *combo_index_check
