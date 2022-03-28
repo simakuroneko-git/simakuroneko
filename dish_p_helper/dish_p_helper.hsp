@@ -33,7 +33,7 @@
 #const WINDOW_HEIGHT							480
 
 #define APPLICATION_TITLE						"Dish P Helper"
-#define APPLICATION_VER							"Ver 2.1"
+#define APPLICATION_VER							"2.1"
 
 #define CONFIG_FILE_NAME						"dish_p_helper_dat.ini"
 #define CONFIG_WINDOW_POS_X						"#window_pos_x="
@@ -515,7 +515,7 @@
 
 	switch cmd_line_flg
 	case FALSE
-		title APPLICATION_TITLE + " - " + APPLICATION_VER
+		title APPLICATION_TITLE + " - Ver " + APPLICATION_VER
 		gosub *config_file_read
 		gosub *screen_init
 		swbreak
@@ -811,7 +811,7 @@
 
 	project_split = ""
 	split project_item, "\n", project_split
-	title "<" + project_split(project_index) + "> - " + APPLICATION_TITLE + " " + APPLICATION_VER
+	title "<" + project_split(project_index) + "> - " + APPLICATION_TITLE + " Ver " + APPLICATION_VER
 
 	android_manifest_xml			= ""
 	main_c							= ""
