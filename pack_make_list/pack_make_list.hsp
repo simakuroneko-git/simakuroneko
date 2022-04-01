@@ -2,7 +2,7 @@
 
 ;--------------------------------------------------------------------------------------
 ;
-;	#packリスト作成ツール ver 1.0
+;	#packリスト作成ツール ver 1.1
 ;
 ;	By. しまくろねこ
 ;
@@ -27,7 +27,7 @@
 #const WINDOW_HEIGHT				660									; ウィンドウの縦サイズ
 
 #define APPLICATION_TITLE			"#packリスト作成ツール"
-#define APPLICATION_VERSION			"1.0"
+#define APPLICATION_VERSION			"1.1"
 
 #define CONFIG_FILE_NAME			"pack_make_list_dat.ini"			; 設定ファイル
 
@@ -466,7 +466,12 @@
 //-------------------------------------------------------------------------
 *program_list_delete
 
-	dialog "削除しますか？", 3, "削除確認"
+	get_buff = ""
+	notesel program_list
+	noteget get_buff, select_index
+	noteunsel
+
+	dialog get_buff + "\nを削除しますか？", 3, "削除確認"
 
 	if stat = 6 {
 
