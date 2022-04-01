@@ -2,7 +2,7 @@
 ;
 ; Dish P Helper
 ;
-; Ver 2.1
+; Ver 2.2
 ;
 ; HSP3Dish Helper用 プロジェクト補助アプリケーション
 ;
@@ -33,11 +33,14 @@
 #const WINDOW_HEIGHT							480
 
 #define APPLICATION_TITLE						"Dish P Helper"
-#define APPLICATION_VER							"2.1"
+#define APPLICATION_VER							"2.2"
 
 #define CONFIG_FILE_NAME						"dish_p_helper_dat.ini"
 #define CONFIG_WINDOW_POS_X						"#window_pos_x="
 #define CONFIG_WINDOW_POS_y						"#window_pos_y="
+
+#define PROJECT_MODE_HSP3DISH					"HSP3Dish"
+#define PROJECT_MODE_HGIMG4						"HGIMG4"
 
 #const FILE_NAME_MAX							9
 #const FILE_NAME_INDEX_ANDROID_MANIFEST_XML		0
@@ -991,13 +994,22 @@
 	font msgothic, FONT_SIZE
 
 	color 0, 0, 0
+	
+	pos pos_x(POS_X_PROJECT),					pos_y(POS_Y_PROJECT) + 5		: mes "プロジェクト名
 
 	switch hsp3dish_hgimg4_mode
-	case HSP3DISH_HGIMG4_MODE_DISH		: p_mode = "HSP3Dish"	: swbreak
-	case HSP3DISH_HGIMG4_MODE_HGIMG4	: p_mode = "HGIMG4"		: swbreak
+	case HSP3DISH_HGIMG4_MODE_DISH
+		p_mode = PROJECT_MODE_HSP3DISH
+		color 0, 0, 255
+		swbreak
+	case HSP3DISH_HGIMG4_MODE_HGIMG4
+		p_mode = PROJECT_MODE_HGIMG4
+		color 255, 0, 0
+		swbreak
 	swend
-	
-	pos pos_x(POS_X_PROJECT),					pos_y(POS_Y_PROJECT) + 5		: mes "プロジェクト名 - (" + p_mode + ")"
+	pos pos_x(POS_X_PROJECT) + 100,				pos_y(POS_Y_PROJECT) + 5		: mes "(" + p_mode + ")"
+
+	color 0, 0, 0
 
 	pos pos_x(POS_X_VERSION_CODE),				pos_y(POS_Y_VERSION_CODE)		: mes "バージョンコード(versionCode)"
 	pos pos_x(POS_X_VERSION_NAME),				pos_y(POS_Y_VERSION_NAME)		: mes "バージョンネーム(versionName)"
