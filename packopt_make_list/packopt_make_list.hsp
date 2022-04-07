@@ -92,6 +92,13 @@
 
 	return re
 
+//-------------------------------------------------------------------------
+#deffunc func_line int x1, int y1, int x2, int y2
+
+	color 0, 0, 0		: line x1, y1, x2, y2
+	color 255, 255, 255	: line x1 + 1, y1 + 1, x2 + 1, y2 + 1
+	return
+
 #global
 //-------------------------------------------------------------------------
 
@@ -197,6 +204,8 @@
 	pos 230, y		: combox upx_set, 0, "圧縮なし\n圧縮あり";input upx_set, 200, 24, 0
 	obj_id(OBJ_ID_PACKOPT_UPX) = stat
 
+	func_line 10, y + 30, SCREEN_WIDTH - 10, y + 30
+
 	y += y_plus
 	objsize 200, 24
 	space_not_make = 1
@@ -209,11 +218,11 @@
 	button gosub "#packoptリスト作成", *info_refresh
 
 
-	y += 60
+	y += 50
 	packopt_list = ""
-	pos 10, y	: mesbox packopt_list, 420, 150, 1	:	obj_id_packopt_list = stat :  hInput = objinfo(stat, 2)
+	pos 10, y	: mesbox packopt_list, 420, 160, 1	:	obj_id_packopt_list = stat :  hInput = objinfo(stat, 2)
 
-	y += 160
+	y += 170
 	pos 230, y
 	objsize 200, 35 : button gosub "クリップボードにコピー", *clip_copy
 
