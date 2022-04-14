@@ -21,7 +21,7 @@
 #include "shell32.as"
 #include "hspext.as"
 #include "gdi32.as
-#include "hspcmp.as""
+#include "hspcmp.as"
 //#include "encode.as"													; S-JISからUTF-8に変換するため
 
 #const WINDOW_WIDTH					640									; ウィンドウの横サイズ
