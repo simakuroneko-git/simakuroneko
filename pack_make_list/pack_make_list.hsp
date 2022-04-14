@@ -1240,6 +1240,7 @@
 	if stat == 6 {
 
 		objenable obj_id(OBJ_ID_MKDPM), FALSE
+		objprm obj_id(OBJ_ID_MKDPM), "ˆ—’†..."
 
 		cur_dir = dir_cur
 
@@ -1292,6 +1293,7 @@
 		chdir cur_dir
 
 		objenable obj_id(OBJ_ID_MKDPM), TRUE
+		objprm obj_id(OBJ_ID_MKDPM), "DPMƒtƒ@ƒCƒ‹ì¬"
 	}
 
 	return
