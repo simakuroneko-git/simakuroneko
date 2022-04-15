@@ -2,7 +2,7 @@
 
 ;--------------------------------------------------------------------------------------
 ;
-;	#packリスト作成ツール ver 1.4
+;	#packリスト作成ツール ver 1.5
 ;
 ;	By. しまくろねこ
 ;
@@ -28,7 +28,7 @@
 #const WINDOW_HEIGHT				660									; ウィンドウの縦サイズ
 
 #define APPLICATION_TITLE			"#packリスト作成ツール"
-#define APPLICATION_VERSION			"1.4"
+#define APPLICATION_VERSION			"1.5"
 
 #define CONFIG_FILE_NAME			"pack_make_list_dat.ini"			; 設定ファイル
 
@@ -69,9 +69,10 @@
 #const OBJ_ID_DECKEY				OBJ_ID_KAKUCHOUSHI_MAX + 15
 #const OBJ_ID_MKKEY					OBJ_ID_KAKUCHOUSHI_MAX + 16
 #const OBJ_ID_FILE_EXIST			OBJ_ID_KAKUCHOUSHI_MAX + 17
-#const OBJ_ID_ENC					OBJ_ID_KAKUCHOUSHI_MAX + 18
-#const OBJ_ID_DPM_NAME				OBJ_ID_KAKUCHOUSHI_MAX + 19
-#const OBJ_ID_MKDPM					OBJ_ID_KAKUCHOUSHI_MAX + 20
+#const OBJ_ID_FOLDER_OPEN			OBJ_ID_KAKUCHOUSHI_MAX + 18
+#const OBJ_ID_ENC					OBJ_ID_KAKUCHOUSHI_MAX + 19
+#const OBJ_ID_DPM_NAME				OBJ_ID_KAKUCHOUSHI_MAX + 20
+#const OBJ_ID_MKDPM					OBJ_ID_KAKUCHOUSHI_MAX + 21
 
 #const LENGTH_PROGRAM				256									; 新規追加ウィンドウ - プログラム名の最大文字数
 #const LENGTH_EXTENSION				32									; 検索拡張子の最大文字数
@@ -340,6 +341,12 @@
 	color 0, 0, 0
 	pos 10, y : mes "■DPMファイル作成"
 
+	objsize 120, 24
+	pos 280, y - 5
+	enc = 0
+	chkbox "全体を暗号化する", enc : obj_id(OBJ_ID_ENC) = stat
+
+
 	y += 25
 	objsize 120, 24
 	pos 10, y : mes "暗号化キー: (0の場合は標準DPMを作成します)"
@@ -350,14 +357,14 @@
 	pos 385, y - 5 : button gosub "生成", *mkkey : obj_id(OBJ_ID_MKKEY) = stat
 
 	objsize 160, 24
-	pos 490, y - 25
+	pos 490, y - 30
 	file_exist = 1
 	chkbox "ﾌｧｲﾙの有無を調べる", file_exist : obj_id(OBJ_ID_FILE_EXIST) = stat
 
 	objsize 160, 24
 	pos 490, y - 5
-	enc = 0
-	chkbox "全体を暗号化する", enc : obj_id(OBJ_ID_ENC) = stat
+	folder_open = 1
+	chkbox "作成後フォルダを開く", folder_open : obj_id(OBJ_ID_FOLDER_OPEN) = stat
 
 	y += 25
 	pos 10, y : mes "DPMファイル名: (拡張子はいりません)"
@@ -1156,6 +1163,7 @@
 	objenable obj_id(OBJ_ID_DECKEY), obj_enable_sw
 	objenable obj_id(OBJ_ID_MKKEY), obj_enable_sw
 	objenable obj_id(OBJ_ID_FILE_EXIST), obj_enable_sw
+	objenable obj_id(OBJ_ID_FOLDER_OPEN), obj_enable_sw
 	objenable obj_id(OBJ_ID_ENC), obj_enable_sw
 	objenable obj_id(OBJ_ID_DPM_NAME), obj_enable_sw
 	objenable obj_id(OBJ_ID_MKDPM), obj_enable_sw
@@ -1289,6 +1297,10 @@
 			pack_make 1, deckey
 
 			dialog now_folder(0) + "\nに\n" + PACK_FILE_NAME + "\n" + (dpm_name + DPM_EXT) + "\nを作成しました。", 0, "作成完了"
+
+			if folder_open {
+				exec now_folder(0), 0, "explore"
+			}
 		}
 		chdir cur_dir
 
