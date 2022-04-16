@@ -2,7 +2,7 @@
 
 ;--------------------------------------------------------------------------------------
 ;
-;	#packリスト作成ツール ver 1.5
+;	#packリスト作成ツール ver 1.6
 ;
 ;	By. しまくろねこ
 ;
@@ -25,10 +25,10 @@
 //#include "encode.as"													; S-JISからUTF-8に変換するため
 
 #const WINDOW_WIDTH					640									; ウィンドウの横サイズ
-#const WINDOW_HEIGHT				660									; ウィンドウの縦サイズ
+#const WINDOW_HEIGHT				620									; ウィンドウの縦サイズ
 
 #define APPLICATION_TITLE			"#packリスト作成ツール"
-#define APPLICATION_VERSION			"1.5"
+#define APPLICATION_VERSION			"1.6"
 
 #define CONFIG_FILE_NAME			"pack_make_list_dat.ini"			; 設定ファイル
 
@@ -258,7 +258,7 @@
 	sdim ext, LENGTH_EXTENSION, OBJ_ID_KAKUCHOUSHI_MAX
 
 	repeat OBJ_ID_KAKUCHOUSHI_MAX
-		pos 10, 75 + cnt * 24  : input ext(cnt), 100, 22, 32 : obj_id(cnt) = stat
+		pos 10, 77 + cnt * 22  : input ext(cnt), 100, 20, 32 : obj_id(cnt) = stat
 	loop
 
 	y = 10
@@ -297,7 +297,7 @@
 	pos 140, y + 20 : button gosub "サブフォルダ更新", *list_box_add	: obj_id(OBJ_ID_SUB_FOLDER_REFRESH)	= stat
 
 
-	y += 220
+	y += 180
 	color 100, 100, 100 : line 140, y + 1, 628, y + 1
 	color 255, 255, 255 : line 140, y + 2, 628, y + 2
 	color 0, 0, 0
@@ -448,7 +448,7 @@
 *list_box_control_add
 
 	pos 270, 110
-	winobj "listbox", "", $200, $50200001 | $8, 360, 200 : obj_id(OBJ_ID_SUB_FOLDER) = stat
+	winobj "listbox", "", $200, $50200001 | $8, 360, 160 : obj_id(OBJ_ID_SUB_FOLDER) = stat
 	hListbox = objinfo(obj_id(OBJ_ID_SUB_FOLDER), 2)
 	GetStockObject 17
 	sendmsg hListbox, $30, stat
