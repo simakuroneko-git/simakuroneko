@@ -1400,8 +1400,9 @@
 
 		repeat notemax
 			noteget ff, cnt
-
+			hed = ""
 			if instr(ff, 0, "*") >= 0 {
+				hed = ";"
 				str_size = 1
 			} else {
 				exist ff
@@ -1412,10 +1413,9 @@
 				err_flg = TRUE
 				break
 			} else {
-				hed = ""
 				if dpm_all_enc(0) : hed = "+"
 				if ff == PACK_FILE_NAME : hed = ";"
-				if getpath(ff, 2) = DPM_EXT : hed = ";"
+				if getpath(ff, 2) == DPM_EXT : hed = ";"
 				if hed != "" : noteadd hed + ff, cnt, 1
 			}
 		loop
