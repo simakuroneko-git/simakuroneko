@@ -2,7 +2,7 @@
 
 ;--------------------------------------------------------------------------------------
 ;
-;	#packリスト作成ツール ver 1.6
+;	#packリスト作成ツール ver 1.7
 ;
 ;	By. しまくろねこ
 ;
@@ -28,7 +28,7 @@
 #const WINDOW_HEIGHT				620									; ウィンドウの縦サイズ
 
 #define APPLICATION_TITLE			"#packリスト作成ツール"
-#define APPLICATION_VERSION			"1.6"
+#define APPLICATION_VERSION			"1.7"
 
 #define CONFIG_FILE_NAME			"pack_make_list_dat.ini"			; 設定ファイル
 
@@ -44,6 +44,12 @@
 #define CONFIG_PACK_MODE			"#pack_mode"			+ "\t" 		; 設定ファイル内(#pack/#epack)
 #define CONFIG_ERROR_LENGTH			"#error_file_length"	+ "\t" 		; 設定ファイル内(エラーとするファイル文字数)
 #define CONFIG_KAKUCHOUSHI			"#kakuchoushi_"			+ "\t" 		; 設定ファイル内(拡張子)
+
+#define CONFIG_DPM_ALL_ENC			"#dpm_all_enc"			+ "\t"		; 設定ファイル内(全体を暗号化する)
+#define CONFIG_DPM_ENC_KEY			"#dpm_enc_key"			+ "\t"		; 設定ファイル内(暗号化キー)
+#define CONFIG_DPM_FILE_NAME		"#dpm_file_name"		+ "\t"		; 設定ファイル内(DPMファイル名)
+#define CONFIG_DPM_FILE_EXIST		"#dpm_file_exist"		+ "\t"		; 設定ファイル内(ファイルの有無を調べる)
+#define CONFIG_DPM_FOLDER_OPEN		"#dpm_folder_open"		+ "\t"		; 設定ファイル内(作成後フォルダを開く)
 
 #const global FALSE					0
 #const global TRUE					1
@@ -242,12 +248,19 @@
 	dim obj_id, 100
 	dim obj_id2, 100
 	sdim extension, LENGTH_EXTENSION, program_cnt_max, OBJ_ID_KAKUCHOUSHI_MAX
-
 	sdim now_folder, LENGTH_FOLDER, program_cnt_max			: now_folder(0)		= ""
-	mesbox_kakuchoushi = ""
 	dim  pack_index, program_cnt_max						: pack_index(0)		= 0
-	//dim  error_length, program_cnt_max						: error_length(0)	= LENGTH_ERR_FILE_NAME
+	//dim  error_length, program_cnt_max					: error_length(0)	= LENGTH_ERR_FILE_NAME
 	sdim sub_folder, LENGTH_SUB_FOLDER, program_cnt_max		: sub_folder(0)		= ""
+
+	dim  dpm_all_enc, program_cnt_max
+	dim  dpm_enc_key, program_cnt_max
+	sdim dpm_file_name, LENGTH_FOLDER, program_cnt_max
+	dim  dpm_file_exist, program_cnt_max
+	dim  dpm_folder_open, program_cnt_max
+
+
+	mesbox_kakuchoushi = ""
 
 	objmode 2
 	font msgothic, 12
@@ -343,33 +356,33 @@
 
 	objsize 120, 24
 	pos 280, y - 5
-	enc = 0
-	chkbox "全体を暗号化する", enc : obj_id(OBJ_ID_ENC) = stat
+	dpm_all_enc(0) = 0;enc = 0
+	chkbox "全体を暗号化する", dpm_all_enc(0) : obj_id(OBJ_ID_ENC) = stat
 
 
 	y += 25
 	objsize 120, 24
 	pos 10, y : mes "暗号化キー: (0の場合は標準DPMを作成します)"
-	deckey = 0
-	pos 280, y - 5 : input deckey, 100, 22 : obj_id(OBJ_ID_DECKEY) = stat;obj_deckey = stat
+	dpm_enc_key(0) = 0;deckey = 0
+	pos 280, y - 5 : input dpm_enc_key(0), 100, 22 : obj_id(OBJ_ID_DECKEY) = stat
 
 	objsize 60, 24
 	pos 385, y - 5 : button gosub "生成", *mkkey : obj_id(OBJ_ID_MKKEY) = stat
 
 	objsize 160, 24
 	pos 490, y - 30
-	file_exist = 1
-	chkbox "ﾌｧｲﾙの有無を調べる", file_exist : obj_id(OBJ_ID_FILE_EXIST) = stat
+	dpm_file_exist(0) = 1;file_exist = 1
+	chkbox "ﾌｧｲﾙの有無を調べる", dpm_file_exist(0) : obj_id(OBJ_ID_FILE_EXIST) = stat
 
 	objsize 160, 24
 	pos 490, y - 5
-	folder_open = 1
-	chkbox "作成後フォルダを開く", folder_open : obj_id(OBJ_ID_FOLDER_OPEN) = stat
+	dpm_folder_open(0) = 1;folder_open = 1
+	chkbox "作成後フォルダを開く", dpm_folder_open(0) : obj_id(OBJ_ID_FOLDER_OPEN) = stat
 
 	y += 25
 	pos 10, y : mes "DPMファイル名: (拡張子はいりません)"
-	dpm_name = "data"
-	pos 280, y - 5 : input dpm_name, 100, 22 : obj_id(OBJ_ID_DPM_NAME) = stat
+	dpm_file_name(0) = "data";dpm_name = "data"
+	pos 280, y - 5 : input dpm_file_name(0), 100, 22 : obj_id(OBJ_ID_DPM_NAME) = stat
 
 	objsize 140, 24
 	pos 490, y - 5 : button gosub "DPMファイル作成", *mkdpm : obj_id(OBJ_ID_MKDPM) = stat
@@ -569,6 +582,13 @@
 			dim_del  pack_index, c, 0
 			//dim_del  error_length, c, 0
 			dim_del2 listbox_item, c, 1
+
+			dim_del  dpm_all_enc, c, 0
+			dim_del  dpm_enc_key, c, 0
+			dim_del  dpm_file_exist, c, 0
+			dim_del  dpm_folder_open, c, 0
+			dim_del  dpm_file_name, c, 1
+
 			dim_del  select_sub_folder_cnt, c, 0
 		}
 
@@ -730,6 +750,66 @@
 	loop
 	sdim d_listbox_item, 1
 
+	; ------- 全体を暗号化する
+	dim d_dpm_all_enc, program_cnt_max
+	repeat program_cnt_max
+		d_dpm_all_enc(cnt) = dpm_all_enc(cnt)
+	loop
+	dim dpm_all_enc, program_cnt_max + 1
+	repeat program_cnt_max
+		dpm_all_enc(cnt) = d_dpm_all_enc(cnt)
+	loop
+	dim d_dpm_all_enc, 1
+	dpm_all_enc(program_cnt_max) = 0
+
+	; ------- 暗号化キー
+	dim d_dpm_enc_key, program_cnt_max
+	repeat program_cnt_max
+		d_dpm_enc_key(cnt) = dpm_enc_key(cnt)
+	loop
+	dim dpm_enc_key, program_cnt_max + 1
+	repeat program_cnt_max
+		dpm_enc_key(cnt) = d_dpm_enc_key(cnt)
+	loop
+	dim d_dpm_enc_key, 1
+	dpm_enc_key(program_cnt_max) = 0
+
+	; ------- DPMファイル名
+	sdim d_dpm_file_name, LENGTH_FOLDER, program_cnt_max
+	repeat program_cnt_max
+		d_dpm_file_name(cnt) = dpm_file_name(cnt)
+	loop
+	sdim dpm_file_name, LENGTH_FOLDER, program_cnt_max + 1
+	repeat program_cnt_max
+		dpm_file_name(cnt) = d_dpm_file_name(cnt)
+	loop
+	sdim d_dpm_file_name, 1
+	dpm_file_name(program_cnt_max) = "data"
+
+	; ------- ファイルの有無を調べる
+	dim d_dpm_file_exist, program_cnt_max
+	repeat program_cnt_max
+		d_dpm_file_exist(cnt) = dpm_file_exist(cnt)
+	loop
+	dim dpm_file_exist, program_cnt_max + 1
+	repeat program_cnt_max
+		dpm_file_exist(cnt) = d_dpm_file_exist(cnt)
+	loop
+	dim d_dpm_file_exist, 1
+	dpm_file_exist(program_cnt_max) = 1
+
+	; ------- 作成後フォルダを開く
+	dim d_dpm_folder_open, program_cnt_max
+	repeat program_cnt_max
+		d_dpm_folder_open(cnt) = dpm_folder_open(cnt)
+	loop
+	dim dpm_folder_open, program_cnt_max + 1
+	repeat program_cnt_max
+		dpm_folder_open(cnt) = d_dpm_folder_open(cnt)
+	loop
+	dim d_dpm_folder_open, 1
+	dpm_folder_open(program_cnt_max) = 1
+
 	; ------- リストボックスを選択しているアイテム数
 	dim d_select_sub_folder_cnt, program_cnt_max
 	repeat program_cnt_max
@@ -749,7 +829,6 @@
 
 	objprm obj_id(OBJ_ID_PROGRAM_LIST), program_list
 	objprm obj_id(OBJ_ID_PROGRAM_LIST), program_cnt_max - 2
-
 
 	obj_enable_sw = TRUE
 	gosub *object_enable
@@ -935,6 +1014,10 @@
 	win_pos_x = 0
 	win_pos_y = 0
 
+	dpm_file_name_flg = FALSE
+	dpm_file_exist_flg = FALSE
+	dpm_folder_open_flg = FALSE
+
 	file_buff = ""
 
 	re = func_pack_ini_file_read(CONFIG_FILE_NAME, file_buff)
@@ -983,11 +1066,40 @@
 			if instr(line_buff, 0, CONFIG_ERROR_LENGTH) >= 0 {
 				error_length(c) = int(strmid(line_buff, strlen(CONFIG_ERROR_LENGTH), strlen(line_buff) - strlen(CONFIG_ERROR_LENGTH)))
 			}
+
+			if instr(line_buff, 0, CONFIG_DPM_ALL_ENC) >= 0 {
+				dpm_all_enc(c) = int(strmid(line_buff, strlen(CONFIG_DPM_ALL_ENC), strlen(line_buff) - strlen(CONFIG_DPM_ALL_ENC)))
+			}
+			if instr(line_buff, 0, CONFIG_DPM_ENC_KEY) >= 0 {
+				dpm_enc_key(c) = int(strmid(line_buff, strlen(CONFIG_DPM_ENC_KEY), strlen(line_buff) - strlen(CONFIG_DPM_ENC_KEY)))
+			}
+			if instr(line_buff, 0, CONFIG_DPM_FILE_NAME) >= 0 {
+				dpm_file_name(c) = strmid(line_buff, strlen(CONFIG_DPM_FILE_NAME), strlen(line_buff) - strlen(CONFIG_DPM_FILE_NAME))
+				dpm_file_name_flg = TRUE
+				if strlen(dpm_file_name(c)) == 0 {
+					dpm_file_name(c) = "data"
+				}
+	
+			}
+			if instr(line_buff, 0, CONFIG_DPM_FILE_EXIST) >= 0 {
+				dpm_file_exist(c) = int(strmid(line_buff, strlen(CONFIG_DPM_FILE_EXIST), strlen(line_buff) - strlen(CONFIG_DPM_FILE_EXIST)))
+				dpm_file_exist_flg = TRUE
+			}
+			if instr(line_buff, 0, CONFIG_DPM_FOLDER_OPEN) >= 0 {
+				dpm_folder_open(c) = int(strmid(line_buff, strlen(CONFIG_DPM_FOLDER_OPEN), strlen(line_buff) - strlen(CONFIG_DPM_FOLDER_OPEN)))
+				dpm_folder_open_flg = TRUE
+			}
+
 			repeat OBJ_ID_KAKUCHOUSHI_MAX
 				buff = CONFIG_KAKUCHOUSHI + str(cnt) + "\t"
 				if instr(line_buff, 0, buff) >=0 {
 					extension(c, i) = strmid(line_buff, strlen(buff), strlen(line_buff) - strlen(buff))
 					i++
+				}
+				if (cnt + 1) == OBJ_ID_KAKUCHOUSHI_MAX {
+					if dpm_file_name_flg == FALSE	: dpm_file_name(c) = "data"
+					if dpm_file_exist_flg == FALSE	: dpm_file_exist(c) = 1
+					if dpm_folder_open_flg == FALSE	: dpm_folder_open(c) = 1
 				}
 			loop
 		loop
@@ -1009,6 +1121,12 @@
 		objprm obj_id(OBJ_ID_PROGRAM_LIST), select_index
 
 		gosub *list_box_select_item
+
+		objprm obj_id(OBJ_ID_ENC), dpm_all_enc(c)
+		objprm obj_id(OBJ_ID_DECKEY), dpm_enc_key(c)
+		objprm obj_id(OBJ_ID_FILE_EXIST), dpm_file_exist(c)
+		objprm obj_id(OBJ_ID_FOLDER_OPEN), dpm_folder_open(c)
+		objprm obj_id(OBJ_ID_DPM_NAME), dpm_file_name(c)
 
 		repeat OBJ_ID_KAKUCHOUSHI_MAX
 			objprm obj_id(cnt), str(extension(c, cnt))
@@ -1057,6 +1175,12 @@
 		now_folder(c) = str(now_folder(0))
 		pack_index(c) = pack_index(0)
 		error_length(c) = error_length(0)
+
+		dpm_all_enc(c) = dpm_all_enc(0)
+		dpm_enc_key(c) = dpm_enc_key(0)
+		dpm_file_name(c) = dpm_file_name(0)
+		dpm_file_exist(c) = dpm_file_exist(0)
+		dpm_folder_open(c) = dpm_folder_open(0)
 
 		repeat OBJ_ID_KAKUCHOUSHI_MAX
 			extension(c, cnt) = str(ext(cnt))
@@ -1197,6 +1321,13 @@
 			ini_buff += CONFIG_SUB_FOLDER + sub_folder_buff + "\n"
 			ini_buff += CONFIG_PACK_MODE + str(pack_index(c)) + "\n"
 			//ini_buff += CONFIG_ERROR_LENGTH + str(error_length(c)) + "\n"
+
+			ini_buff += CONFIG_DPM_ALL_ENC + str(dpm_all_enc(c)) + "\n"
+			ini_buff += CONFIG_DPM_ENC_KEY + str(dpm_enc_key(c)) + "\n"
+			ini_buff += CONFIG_DPM_FILE_NAME + dpm_file_name(c) + "\n"
+			ini_buff += CONFIG_DPM_FILE_EXIST + str(dpm_file_exist(c)) + "\n"
+			ini_buff += CONFIG_DPM_FOLDER_OPEN + str(dpm_folder_open(c)) + "\n"
+
 			repeat OBJ_ID_KAKUCHOUSHI_MAX
 				ini_buff += CONFIG_KAKUCHOUSHI + str(cnt) + "\t" + extension(c, cnt) + "\n"
 			loop
@@ -1243,9 +1374,11 @@
 		return
 	}
 
-	dialog now_folder(0) + "\nに \"" + (dpm_name + DPM_EXT) + "\" を作成しますか？", 2, "確認"
+	dialog now_folder(0) + "\nに \"" + (dpm_file_name(0) + DPM_EXT) + "\" を作成しますか？", 2, "確認"
 
 	if stat == 6 {
+
+		gosub *setting_update
 
 		objenable obj_id(OBJ_ID_MKDPM), FALSE
 		objprm obj_id(OBJ_ID_MKDPM), "処理中..."
@@ -1274,13 +1407,13 @@
 				exist ff
 				str_size = strsize
 			}
-			if (file_exist) && (str_size == -1) {
+			if (dpm_file_exist(0)) && (str_size == -1) {
 				dialog "ファイル: \"" + ff + "\" が存在しません。\n処理をキャンセルします。", 1, "処理のキャンセル"
 				err_flg = TRUE
 				break
 			} else {
 				hed = ""
-				if enc : hed = "+"
+				if dpm_all_enc(0) : hed = "+"
 				if ff == PACK_FILE_NAME : hed = ";"
 				if getpath(ff, 2) = DPM_EXT : hed = ";"
 				if hed != "" : noteadd hed + ff, cnt, 1
@@ -1293,12 +1426,12 @@
 			noteunsel
 
 			hsc_ini ""
-			pack_ini dpm_name + DPM_EXT
-			pack_make 1, deckey
+			pack_ini dpm_file_name(0) + DPM_EXT
+			pack_make 1, dpm_enc_key(0)
 
-			dialog now_folder(0) + "\nに\n" + PACK_FILE_NAME + "\n" + (dpm_name + DPM_EXT) + "\nを作成しました。", 0, "作成完了"
+			dialog now_folder(0) + "\nに\n" + PACK_FILE_NAME + "\n" + (dpm_file_name(0) + DPM_EXT) + "\nを作成しました。", 0, "作成完了"
 
-			if folder_open {
+			if dpm_folder_open(0) {
 				exec now_folder(0), 0, "explore"
 			}
 		}
