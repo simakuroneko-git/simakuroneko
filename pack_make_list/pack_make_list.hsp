@@ -343,7 +343,6 @@
 	objsize 140, 24
 	pos 340, y : button gosub "クリップボードにCOPY", *clip_copy	: obj_id(OBJ_ID_CLIP_COPY) = stat
 	pos 490, y : button gosub "ファイルとして保存", *file_write		: obj_id(OBJ_ID_FILE_WRITE) = stat
-	//pos 140, y + 35 : mesbox mesbox_kakuchoushi, 490, 210, 1 + 4, 0	: obj_id(OBJ_ID_MESBOX_KAKUCHOUSHI)	= stat : hInput = objinfo(stat, 2)
 	pos 140, y + 35 : mesbox mesbox_kakuchoushi, 490, 160, 1 + 4, 0	: obj_id(OBJ_ID_MESBOX_KAKUCHOUSHI)	= stat : hInput = objinfo(stat, 2)
 
 	y += 205
@@ -356,14 +355,14 @@
 
 	objsize 120, 24
 	pos 280, y - 5
-	dpm_all_enc(0) = 0;enc = 0
+	dpm_all_enc(0) = 0
 	chkbox "全体を暗号化する", dpm_all_enc(0) : obj_id(OBJ_ID_ENC) = stat
 
 
 	y += 25
 	objsize 120, 24
 	pos 10, y : mes "暗号化キー: (0の場合は標準DPMを作成します)"
-	dpm_enc_key(0) = 0;deckey = 0
+	dpm_enc_key(0) = 0
 	pos 280, y - 5 : input dpm_enc_key(0), 100, 22 : obj_id(OBJ_ID_DECKEY) = stat
 
 	objsize 60, 24
@@ -371,17 +370,17 @@
 
 	objsize 160, 24
 	pos 490, y - 30
-	dpm_file_exist(0) = 1;file_exist = 1
+	dpm_file_exist(0) = 1
 	chkbox "ﾌｧｲﾙの有無を調べる", dpm_file_exist(0) : obj_id(OBJ_ID_FILE_EXIST) = stat
 
 	objsize 160, 24
 	pos 490, y - 5
-	dpm_folder_open(0) = 1;folder_open = 1
+	dpm_folder_open(0) = 1
 	chkbox "作成後フォルダを開く", dpm_folder_open(0) : obj_id(OBJ_ID_FOLDER_OPEN) = stat
 
 	y += 25
 	pos 10, y : mes "DPMファイル名: (拡張子はいりません)"
-	dpm_file_name(0) = "data";dpm_name = "data"
+	dpm_file_name(0) = "data"
 	pos 280, y - 5 : input dpm_file_name(0), 100, 22 : obj_id(OBJ_ID_DPM_NAME) = stat
 
 	objsize 140, 24
@@ -1402,7 +1401,7 @@
 			noteget ff, cnt
 			hed = ""
 			if instr(ff, 0, "*") >= 0 {
-				hed = ";"
+				hed = ";"			// ワイルドカードもDPMファイルに入れられる場合は、この行を削除かコメントアウトする。
 				str_size = 1
 			} else {
 				exist ff
