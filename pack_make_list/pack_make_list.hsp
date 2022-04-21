@@ -587,7 +587,8 @@
 			dim_del  pack_index, c, 0
 			//dim_del  error_length, c, 0
 			dim_del2 listbox_item, c, 1
-
+			dim_del  wild_card, c, 0
+			
 			dim_del  dpm_all_enc, c, 0
 			dim_del  dpm_enc_key, c, 0
 			dim_del  dpm_file_exist, c, 0
