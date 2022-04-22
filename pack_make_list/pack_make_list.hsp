@@ -2,7 +2,7 @@
 
 ;--------------------------------------------------------------------------------------
 ;
-;	#packリスト作成ツール ver 1.8
+;	#packリスト作成ツール ver 1.9
 ;
 ;	By. しまくろねこ
 ;
@@ -28,7 +28,7 @@
 #const WINDOW_HEIGHT				620									; ウィンドウの縦サイズ
 
 #define APPLICATION_TITLE			"#packリスト作成ツール"
-#define APPLICATION_VERSION			"1.8"
+#define APPLICATION_VERSION			"1.9"
 
 #define CONFIG_FILE_NAME			"pack_make_list_dat.ini"			; 設定ファイル
 
@@ -1393,9 +1393,9 @@
 	a3 = rnd(255) + 1
 	a4 = rnd(255) + 1
 
-	deckey = (a4 << 24) + (a3 << 16) + (a2 << 8) + a1
+	dpm_enc_key(0) = (a4 << 24) + (a3 << 16) + (a2 << 8) + a1
 
-	objprm obj_id(OBJ_ID_DECKEY), deckey
+	objprm obj_id(OBJ_ID_DECKEY), dpm_enc_key(0)
 
 	return
 
@@ -1447,7 +1447,7 @@
 			noteget ff, cnt
 			hed = ""
 			if instr(ff, 0, "*") >= 0 {
-				hed = ";"			// ワイルドカードもDPMファイルに入れられる場合は、この行を削除かコメントアウトする。
+				//hed = ";"			// ワイルドカードもDPMファイルに入れられる場合は、この行を削除かコメントアウトする。
 				str_size = 1
 			} else {
 				exist ff
