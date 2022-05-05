@@ -4,7 +4,7 @@
 #packopt name "packopt_make_list"
 #packopt type 0
 #packopt xsize 440
-#packopt ysize 650
+#packopt ysize 630
 #packopt hide 0
 #packopt orgpath 0
 #packopt icon "icon.ico"
@@ -40,10 +40,10 @@
 #const OBJ_ID_PACKOPT_LANG			10
 #const OBJ_ID_PACKOPT_UPX			11
 
-#define APP_VERSION					"0.2"
+#define APP_VERSION					"0.3"
 
 #const SCREEN_WIDTH					440
-#const SCREEN_HEIGHT				650
+#const SCREEN_HEIGHT				630
 
 #const BUFFER_MAIN					0
 
@@ -138,16 +138,18 @@
 	objmode 2
 	font msgothic, 12
 
-	y_plus = 30
+	input_height = 22
+
+	y_plus = 28
 
 	y = 20
 	pos 10, y + 5	: mes "実行ファイル名(\".EXE\")は未入力"
-	pos 230, y		: input packopt_name, 200, 24, 0
+	pos 230, y		: input packopt_name, 200, input_height, 0
 	obj_id(OBJ_ID_PACKOPT_NAME) = stat
 
 	y += y_plus
 	pos 10, y + 5	: mes "ランタイム名"
-	pos 230, y		: input runtime_name, 200, 24, 0
+	pos 230, y		: input runtime_name, 200, input_height, 0
 	obj_id(OBJ_ID_PACKOPT_RUNTIME) = stat
 
 	y += y_plus
@@ -159,12 +161,12 @@
 	y += y_plus
 	pos 10, y + 5	: mes "初期ウィンドウXサイズ"
 	pos 230, y + 5	: mes "X:"
-	pos 245, y		: input window_width, 50, 24, 0
+	pos 245, y		: input window_width, 50, input_height, 0
 	obj_id(OBJ_ID_PACKOPT_XSIZE) = stat
 
 	;y += 35
 	pos 320, y + 5	: mes "Y:"
-	pos 335, y		: input window_height, 50, 24, 0
+	pos 335, y		: input window_height, 50, input_height, 0
 	obj_id(OBJ_ID_PACKOPT_YSIZE) = stat
 
 	y += y_plus
@@ -181,22 +183,22 @@
 
 	y += y_plus
 	pos 10, y + 5	: mes "アイコンファイル名"
-	pos 230, y		: input icon_file, 200, 24, 0
+	pos 230, y		: input icon_file, 200, input_height, 0
 	obj_id(OBJ_ID_PACKOPT_ICON) = stat
 
 	y += y_plus
 	pos 10, y + 5	: mes "バージョンリソース設定(ファイル名)"
-	pos 230, y		: input version_set, 200, 24, 0
+	pos 230, y		: input version_set, 200, input_height, 0
 	obj_id(OBJ_ID_PACKOPT_VERSION) = stat
 
 	y += y_plus
 	pos 10, y + 5	: mes "マニフェスト設定(ファイル名)"
-	pos 230, y		: input manifest_file, 200, 24, 0
+	pos 230, y		: input manifest_file, 200, input_height, 0
 	obj_id(OBJ_ID_PACKOPT_MANIFEST) = stat
 
 	y += y_plus
 	pos 10, y + 5	: mes "言語コード設定"
-	pos 230, y		: input lang_set, 200, 24, 0
+	pos 230, y		: input lang_set, 200, input_height, 0
 	obj_id(OBJ_ID_PACKOPT_LANG) = stat
 
 	y += y_plus
