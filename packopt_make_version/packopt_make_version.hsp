@@ -4,6 +4,7 @@
 #packopt ysize 580
 #packopt hide 1
 #packopt orgpath 0
+#packopt icon "icon.ico"
 ;#packopt version "ver.txt"
 
 
@@ -38,7 +39,7 @@
 
 
 #define APP_TITLE					"#packopt versionファイル作成ツール"
-#define APP_VERSION					"0.1"
+#define APP_VERSION					"0.2"
 
 #const SCREEN_WIDTH					430
 #const SCREEN_HEIGHT				580
@@ -314,13 +315,13 @@ ProductName=製品名
 		file_buff = ""
 		noteload refstr
 
-		_fileversion_chk		= 1
+		_fileversion_chk		= 0
 		_fileversion_1			= ""
 		_fileversion_2			= ""
 		_fileversion_3			= ""
 		_fileversion_4			= ""
 
-		_productversion_chk		= 1
+		_productversion_chk		= 0
 		_productversion_1		= ""
 		_productversion_2		= ""
 		_productversion_3		= ""
@@ -330,17 +331,17 @@ ProductName=製品名
 		comments				= ""
 		companyname_chk			= 0
 		companyname				= ""
-		filedescription_chk		= 1
+		filedescription_chk		= 0
 		filedescription			= ""
 		fileversion_chk			= 0
 		fileversion				= ""
 		internalname_chk		= 0
 		internalname			= ""
-		legalcopyright_chk		= 1
+		legalcopyright_chk		= 0
 		legalcopyright			= ""
-		originalfilename_chk	= 1
+		originalfilename_chk	= 0
 		originalfilename		= ""
-		productname_chk			= 1
+		productname_chk			= 0
 		productname				= ""
 		productversion_chk		= 0
 		productversion			= ""
