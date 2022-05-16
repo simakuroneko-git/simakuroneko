@@ -106,7 +106,7 @@
 #const OBJ_ID_WRITE_FILE_NAME		45
 
 #define APP_TITLE_MAIN				"#packoptリスト作成ツール"
-#define APP_VERSION					"0.4"
+#define APP_VERSION					"0.5"
 
 #const SCREEN_MAIN_WIDTH			440
 #const SCREEN_MAIN_HEIGHT			630
@@ -351,7 +351,7 @@
 
 	y += 170
 	objsize 300, 35
-	pos 10, y	: button gosub "HSPスクリプトエディタのカーソルの位置に貼り付け", *paste_editor
+	pos 10, y	: button gosub "標準HSPｽｸﾘﾌﾟﾄｴﾃﾞｨﾀのｶｰｿﾙの位置に貼り付け", *paste_editor
 	objsize 120, 35
 	pos 310, y	: button gosub "ｸﾘｯﾌﾟﾎﾞｰﾄﾞにｺﾋﾟｰ", *clip_copy
 
@@ -656,7 +656,7 @@
 		pos 10, y	: input version_file_name, 200, input_height, 0						:	obj_id(OBJ_ID_WRITE_FILE_NAME) = stat
 
 		
-		pos 220, y	: button gosub "保存(+ウィンドウを閉じる)", *file_write				:	obj_id(OBJ_ID_FILEWRITE) = stat
+		pos 220, y - 12	: button gosub "保存(+ウィンドウを閉じる)", *file_write			:	obj_id(OBJ_ID_FILEWRITE) = stat
 
 	}
 
@@ -1109,7 +1109,7 @@
 //-------------------------------------------------------------------------
 *paste_editor
 
-	dialog "HSPスクリプトエディタのカーソルの位置に貼り付けますか？", 2, "確認"
+	dialog "標準HSPスクリプトエディタのカーソルの位置に貼り付けますか？", 2, "確認"
 
 	if stat == 6 {
 		hsed_sendstr packopt_list
