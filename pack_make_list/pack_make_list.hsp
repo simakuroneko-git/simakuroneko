@@ -2,7 +2,7 @@
 
 ;--------------------------------------------------------------------------------------
 ;
-;	#packリスト作成ツール ver 2.1
+;	#packリスト作成ツール ver 2.2
 ;
 ;	By. しまくろねこ
 ;
@@ -29,7 +29,7 @@
 #const WINDOW_HEIGHT				620									; ウィンドウの縦サイズ
 
 #define APPLICATION_TITLE			"#packリスト作成ツール"
-#define APPLICATION_VERSION			"2.1"
+#define APPLICATION_VERSION			"2.2"
 
 #define CONFIG_FILE_NAME			"pack_make_list_dat.ini"			; 設定ファイル
 
@@ -354,7 +354,7 @@
 	pos 330, y : button gosub "クリップボードにCOPY", *clip_copy	: obj_id(OBJ_ID_CLIP_COPY) = stat
 	pos 490, y : button gosub "ファイルとして保存", *file_write		: obj_id(OBJ_ID_FILE_WRITE) = stat
 	objsize 300, 24
-	pos 330, y + 27 : button gosub "HSPスクリプトエディタのカーソルの位置に貼り付け", *paste_editor	: : obj_id(OBJ_ID_HSP_EDITOR_PASTE) = stat
+	pos 330, y + 27 : button gosub "標準HSPｽｸﾘﾌﾟﾄｴﾃﾞｨﾀのｶｰｿﾙの位置に貼り付け", *paste_editor	: : obj_id(OBJ_ID_HSP_EDITOR_PASTE) = stat
 	pos 140, y + 55 : mesbox mesbox_kakuchoushi, 490, 140, 1 + 4, 0	: obj_id(OBJ_ID_MESBOX_KAKUCHOUSHI)	= stat : hInput = objinfo(stat, 2)
 
 	y += 205
@@ -1270,7 +1270,7 @@
 //-------------------------------------------------------------------------
 *paste_editor
 
-	dialog "HSPスクリプトエディタのカーソルの位置に貼り付けますか？", 2, "確認"
+	dialog "標準HSPスクリプトエディタのカーソルの位置に貼り付けますか？", 2, "確認"
 
 	if stat == 6 {
 		hsed_sendstr mesbox_kakuchoushi
