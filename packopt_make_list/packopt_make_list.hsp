@@ -167,8 +167,8 @@
 	packopt_name		= ""
 ;	runtime_name		= ""
 	exe_type			= 0
-	window_width		= 640
-	window_height		= 480
+	window_width		= ""
+	window_height		= ""
 	hide_check			= 0
 	hide_check_dummy	= -1
 	hide_type			= 0
@@ -379,8 +379,8 @@
 		if strlen(packopt_name) > 0		: packopt_list += "#packopt name \""	+ packopt_name	+ "\""	+ "\n"
 ;		if strlen(runtime_name) > 0		: packopt_list += "#packopt runtime \""	+ runtime_name	+ "\""	+ "\n"
 		packopt_list += "#packopt type "		+ exe_type				+ "\n"
-		packopt_list += "#packopt xsize "		+ window_width			+ "\n"
-		packopt_list += "#packopt ysize "		+ window_height			+ "\n"
+		if strlen(window_width) > 0		: packopt_list += "#packopt xsize "		+ window_width			+ "\n"
+		if strlen(window_height) > 0	: packopt_list += "#packopt ysize "		+ window_height			+ "\n"
 		if hide_check == 1				: packopt_list += "#packopt hide "		+ hide_type				+ "\n"
 		if orgpath_check == 1			: packopt_list += "#packopt orgpath "	+ orgpath_type			+ "\n"
 		if strlen(icon_file) > 0		: packopt_list += "#packopt icon \""	+ icon_file		+ "\""	+ "\n"
@@ -423,10 +423,10 @@
 				exe_type = int(strmid(line_buff, strlen(CONFIG_PACKOPT_TYPE), strlen(line_buff) - strlen(CONFIG_PACKOPT_TYPE)))
 			}
 			if instr(line_buff, 0, CONFIG_PACKOPT_XSIZE) >= 0 {
-				window_width = int(strmid(line_buff, strlen(CONFIG_PACKOPT_XSIZE), strlen(line_buff) - strlen(CONFIG_PACKOPT_XSIZE)))
+				window_width = strmid(line_buff, strlen(CONFIG_PACKOPT_XSIZE), strlen(line_buff) - strlen(CONFIG_PACKOPT_XSIZE))
 			}
 			if instr(line_buff, 0, CONFIG_PACKOPT_YSIZE) >= 0 {
-				window_height = int(strmid(line_buff, strlen(CONFIG_PACKOPT_YSIZE), strlen(line_buff) - strlen(CONFIG_PACKOPT_YSIZE)))
+				window_height = strmid(line_buff, strlen(CONFIG_PACKOPT_YSIZE), strlen(line_buff) - strlen(CONFIG_PACKOPT_YSIZE))
 			}
 			if instr(line_buff, 0, CONFIG_PACKOPT_HIDE_CHECK) >= 0 {
 				hide_check = int(strmid(line_buff, strlen(CONFIG_PACKOPT_HIDE_CHECK), strlen(line_buff) - strlen(CONFIG_PACKOPT_HIDE_CHECK)))
