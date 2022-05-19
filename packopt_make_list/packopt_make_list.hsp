@@ -87,7 +87,7 @@
 #const OBJ_ID_WRITE_FILE_NAME			36
 
 #define APP_TITLE_MAIN					"#packoptリスト作成ツール"
-#define APP_VERSION						"0.6"
+#define APP_VERSION						"0.7"
 
 #const SCREEN_MAIN_WIDTH				440
 #const SCREEN_MAIN_HEIGHT				600
@@ -99,6 +99,7 @@
 
 #const BUFFER_MAIN						0
 #const BUFFER_TOOL						1
+#const BUFFER_MENU						2
 
 #const FALSE							0
 #const TRUE								1
@@ -186,35 +187,8 @@
 
 //-------------------------------------------------------------------------
 
+	menu_window_make_obj_flg = FALSE
 	tool_window_make_obj_flg = FALSE
-
-	win_tool_pos_x			= 0
-	win_tool_pos_y			= 0
-
-	_fileversion_1			= ""
-	_fileversion_2			= ""
-	_fileversion_3			= ""
-	_fileversion_4			= ""
-
-	_productversion_1		= ""
-	_productversion_2		= ""
-	_productversion_3		= ""
-	_productversion_4		= ""
-
-	comments				= ""
-	companyname				= ""
-	filedescription			= ""
-	fileversion				= ""
-	internalname			= ""
-	legalcopyright			= ""
-	originalfilename		= ""
-	productname				= ""
-	productversion			= ""
-	space_not_make_2		= 1
-
-	put_text_buff			= ""
-
-	version_file_name		= ""
 
 //-------------------------------------------------------------------------
 
@@ -235,7 +209,7 @@
 
 	y_plus = 28
 
-	y = 20
+	y = 5
 	pos 10, y + 5	: mes "実行ファイル名(\".EXE\")は未入力"
 	pos 230, y		: input packopt_name, 200, input_height, 0
 	obj_id(OBJ_ID_PACKOPT_NAME) = stat
@@ -288,7 +262,7 @@
 
 	objsize 50, input_height
 	pos 330, y		: button gosub "開く", *open_file_window
-	pos 380, y		: button gosub "新規", *open_tool_window
+	pos 380, y		: button gosub "新規", *open_menu_window
 
 	y += y_plus
 	pos 10, y + 5	: mes "マニフェスト設定(ファイル名)"
@@ -528,6 +502,12 @@
 		tool_window_close = TRUE
 		return
 		swbreak
+	case BUFFER_MENU
+		menu_window_close = TRUE
+		gsel BUFFER_MENU, -1
+		gsel BUFFER_MAIN, 1
+		return
+		swbreak
 	swend
 
 //-------------------------------------------------------------------------
@@ -543,7 +523,93 @@
 	return
 
 //-------------------------------------------------------------------------
+*open_menu_window
+
+	open_version_file_flg	= FALSE
+	menu_window_close		= FALSE
+	open_tool_window_flg	= FALSE
+
+	gsel BUFFER_MAIN, -1
+
+	if menu_window_make_obj_flg == FALSE {
+		screen BUFFER_MENU, 300, 180, 0, win_pos_x, win_pos_y
+
+		title "Versionファイル選択"
+
+		syscolor 15
+		boxf
+
+		objmode 2
+		font msgothic, 12
+
+		color 0, 0, 0
+		objsize 250, 35
+		pos 55, 10	: mes "Versionファイルを開いて編集する"
+		pos 25, 30	: button gosub "Versionファイルを開く", *file_open
+		pos 55, 100	: mes "Versionファイルを新たに作成する"
+		pos 25, 120	: button gosub "Versionファイルを新規作成する", *open_tool
+	}
+
+	gsel BUFFER_MENU, 1
+
+	menu_window_make_obj_flg = TRUE
+
+	repeat
+		if open_version_file_flg {
+			gosub *open_tool_window
+			menu_window_close = TRUE
+		}
+		if open_tool_window_flg {
+			gosub *open_tool_window
+			menu_window_close = TRUE
+		}
+		if menu_window_close {
+			break
+		}
+		wait 1
+	loop
+
+	return
+
+//-------------------------------------------------------------------------
+*open_tool
+
+	open_tool_window_flg = TRUE
+
+	return
+
+//-------------------------------------------------------------------------
 *open_tool_window
+
+	;------------------------------------
+	win_tool_pos_x			= 0
+	win_tool_pos_y			= 0
+
+	_fileversion_1			= ""
+	_fileversion_2			= ""
+	_fileversion_3			= ""
+	_fileversion_4			= ""
+
+	_productversion_1		= ""
+	_productversion_2		= ""
+	_productversion_3		= ""
+	_productversion_4		= ""
+
+	comments				= ""
+	companyname				= ""
+	filedescription			= ""
+	fileversion				= ""
+	internalname			= ""
+	legalcopyright			= ""
+	originalfilename		= ""
+	productname				= ""
+	productversion			= ""
+	space_not_make_2		= 1
+
+	put_text_buff			= ""
+
+	version_file_name		= "version.txt"
+	;------------------------------------
 
 	tab_id = 0
 	hsed_getacttabid tab_id
@@ -552,9 +618,15 @@
 	tab_id_file_path = getpath(tab_id_file_path, 32)
 	strrep tab_id_file_path, "\\", "/"
 
+	if open_version_file_flg {
+		version_file_name = getpath(open_file_name, 8)
+		tab_id_file_path = getpath(open_file_name, 32)
+		strrep tab_id_file_path, "\\", "/"
+	}
+
 	tool_window_close = FALSE
 
-	gsel BUFFER_MAIN, -1
+	gsel BUFFER_MENU, -1
 
 	if tool_window_make_obj_flg == FALSE {
 
@@ -574,19 +646,18 @@
 
 		y_plus = 25
 
-		objsize 200, 35
-		y = 5
-		pos 10, y	: button gosub "Versionファイルを開く", *file_open
-		pos 220, y	: button gosub "キャンセル", *close_window
+		;objsize 200, 35
+		;y = 5
+		;pos 10, y	: button gosub "Versionファイルを開く", *file_open
 
-		y += y_plus + 15
-		func_line 10, y, SCREEN_TOOL_WIDTH - 10 , y
+		;y += y_plus + 15
+		;func_line 10, y, SCREEN_TOOL_WIDTH - 10 , y
 
 		color 0, 0, 0
 
 		objsize 220, 22
 
-		y += 10
+		y = 5
 		pos 10, y + 5	: mes "_FILEVERSION(ファイルバージョン)"
 		pos 230, y	: input _fileversion_1, 40, input_height, 0							:	obj_id(OBJ_ID__FILEVERSION_1) = stat
 		pos 280, y	: input _fileversion_2, 40, input_height, 0							:	obj_id(OBJ_ID__FILEVERSION_2) = stat
@@ -665,13 +736,22 @@
 		y += 15
 		pos 10, y	: input version_file_name, 200, input_height, 0						:	obj_id(OBJ_ID_WRITE_FILE_NAME) = stat
 
-		pos 220, y - 12	: button gosub "保存(+ウィンドウを閉じる)", *file_write			:	obj_id(OBJ_ID_FILEWRITE) = stat
+		y += y_plus + 5
+		func_line 10, y, SCREEN_TOOL_WIDTH - 10 , y
+
+		y += 5
+		pos 10, y	: button gosub "保存(+ウィンドウを閉じる)", *file_write				:	obj_id(OBJ_ID_FILEWRITE) = stat
+		pos 220, y	: button gosub "キャンセル", *close_window
 
 	}
 
 	gsel BUFFER_TOOL, 1
 
 	width ,,win_pos_x, win_pos_y
+
+	if open_version_file_flg {
+		gosub *file_value_set
+	}
 
 	gosub *obj_value_set_tool
 
@@ -715,76 +795,89 @@
 	dialog "txt", 16, "テキストファイル"
 
 	if stat == 1 {
-		notesel file_buff
-		file_buff = ""
-		noteload refstr
-
-		_fileversion_1			= ""
-		_fileversion_2			= ""
-		_fileversion_3			= ""
-		_fileversion_4			= ""
-
-		_productversion_1		= ""
-		_productversion_2		= ""
-		_productversion_3		= ""
-		_productversion_4		= ""
-
-		comments				= ""
-		companyname				= ""
-		filedescription			= ""
-		fileversion				= ""
-		internalname			= ""
-		legalcopyright			= ""
-		originalfilename		= ""
-		productname				= ""
-		productversion			= ""
-
-		line_buff = ""
-		repeat notemax
-			noteget line_buff, cnt
-
-			if instr(line_buff, 0, WRITE__FILEVERSION) >= 0 {
-				get_buff = strmid(line_buff, strlen(WRITE__FILEVERSION), strlen(line_buff) - strlen(WRITE__FILEVERSION))
-				split get_buff, ".", _fileversion_1, _fileversion_2, _fileversion_3, _fileversion_4
-			}
-			if instr(line_buff, 0, WRITE__PRODUCTVERSION) >= 0 {
-				get_buff = strmid(line_buff, strlen(WRITE__PRODUCTVERSION), strlen(line_buff) - strlen(WRITE__PRODUCTVERSION))
-				split get_buff, ".", _productversion_1, _productversion_2, _productversion_3, _productversion_4
-			}
-			if instr(line_buff, 0, WRITE_COMMENTS) >= 0 {
-				comments = strmid(line_buff, strlen(WRITE_COMMENTS), strlen(line_buff) - strlen(WRITE_COMMENTS))
-			}
-			if instr(line_buff, 0, WRITE_COMPANYNAME) >= 0 {
-				companyname = strmid(line_buff, strlen(WRITE_COMPANYNAME), strlen(line_buff) - strlen(WRITE_COMPANYNAME))
-			}
-			if instr(line_buff, 0, WRITE_FILEDESCRIPTION) >= 0 {
-				filedescription = strmid(line_buff, strlen(WRITE_FILEDESCRIPTION), strlen(line_buff) - strlen(WRITE_FILEDESCRIPTION))
-			}
-			;if instr(line_buff, 0, WRITE_FILEVERSION) >= 0 {
-			;	fileversion = strmid(line_buff, strlen(WRITE_FILEVERSION), strlen(line_buff) - strlen(WRITE_FILEVERSION))
-			;}
-			if instr(line_buff, 0, WRITE_INTERNALNAME) >= 0 {
-				internalname = strmid(line_buff, strlen(WRITE_INTERNALNAME), strlen(line_buff) - strlen(WRITE_INTERNALNAME))
-			}
-			if instr(line_buff, 0, WRITE_LEGALCOPYRIGHT) >= 0 {
-				legalcopyright = strmid(line_buff, strlen(WRITE_LEGALCOPYRIGHT), strlen(line_buff) - strlen(WRITE_LEGALCOPYRIGHT))
-			}
-			if instr(line_buff, 0, WRITE_ORIGINALFILENAME) >= 0 {
-				originalfilename = strmid(line_buff, strlen(WRITE_ORIGINALFILENAME), strlen(line_buff) - strlen(WRITE_ORIGINALFILENAME))
-			}
-			if instr(line_buff, 0, WRITE_PRODUCTNAME) >= 0 {
-				productname = strmid(line_buff, strlen(WRITE_PRODUCTNAME), strlen(line_buff) - strlen(WRITE_PRODUCTNAME))
-			}
-			;if instr(line_buff, 0, WRITE_PRODUCTVERSION) >= 0 {
-			;	productversion = strmid(line_buff, strlen(WRITE_PRODUCTVERSION), strlen(line_buff) - strlen(WRITE_PRODUCTVERSION))
-			;}
-		loop
-
-		noteunsel
-
-		gosub *obj_value_set_tool
-		gosub *make_text
+		open_file_name			= refstr
+		open_version_file_flg	= TRUE
+		menu_window_close		= TRUE
 	}
+
+	return
+
+//-------------------------------------------------------------------------
+*file_value_set
+	
+	notesel file_buff
+	file_buff = ""
+	noteload open_file_name
+
+	_fileversion_1			= ""
+	_fileversion_2			= ""
+	_fileversion_3			= ""
+	_fileversion_4			= ""
+
+	_productversion_1		= ""
+	_productversion_2		= ""
+	_productversion_3		= ""
+	_productversion_4		= ""
+
+	comments				= ""
+	companyname				= ""
+	filedescription			= ""
+	fileversion				= ""
+	internalname			= ""
+	legalcopyright			= ""
+	originalfilename		= ""
+	productname				= ""
+	productversion			= ""
+
+	line_buff = ""
+	repeat notemax
+		noteget line_buff, cnt
+
+		if instr(line_buff, 0, WRITE__FILEVERSION) >= 0 {
+			get_buff = strmid(line_buff, strlen(WRITE__FILEVERSION), strlen(line_buff) - strlen(WRITE__FILEVERSION))
+			split get_buff, ".", _fileversion_1, _fileversion_2, _fileversion_3, _fileversion_4
+		}
+		if instr(line_buff, 0, WRITE__PRODUCTVERSION) >= 0 {
+			get_buff = strmid(line_buff, strlen(WRITE__PRODUCTVERSION), strlen(line_buff) - strlen(WRITE__PRODUCTVERSION))
+			split get_buff, ".", _productversion_1, _productversion_2, _productversion_3, _productversion_4
+		}
+		if instr(line_buff, 0, WRITE_COMMENTS) >= 0 {
+			comments = strmid(line_buff, strlen(WRITE_COMMENTS), strlen(line_buff) - strlen(WRITE_COMMENTS))
+		}
+		if instr(line_buff, 0, WRITE_COMPANYNAME) >= 0 {
+			companyname = strmid(line_buff, strlen(WRITE_COMPANYNAME), strlen(line_buff) - strlen(WRITE_COMPANYNAME))
+		}
+		if instr(line_buff, 0, WRITE_FILEDESCRIPTION) >= 0 {
+			filedescription = strmid(line_buff, strlen(WRITE_FILEDESCRIPTION), strlen(line_buff) - strlen(WRITE_FILEDESCRIPTION))
+		}
+		;if instr(line_buff, 0, WRITE_FILEVERSION) >= 0 {
+		;	fileversion = strmid(line_buff, strlen(WRITE_FILEVERSION), strlen(line_buff) - strlen(WRITE_FILEVERSION))
+		;}
+		if instr(line_buff, 0, WRITE_INTERNALNAME) >= 0 {
+			internalname = strmid(line_buff, strlen(WRITE_INTERNALNAME), strlen(line_buff) - strlen(WRITE_INTERNALNAME))
+		}
+		if instr(line_buff, 0, WRITE_LEGALCOPYRIGHT) >= 0 {
+			legalcopyright = strmid(line_buff, strlen(WRITE_LEGALCOPYRIGHT), strlen(line_buff) - strlen(WRITE_LEGALCOPYRIGHT))
+		}
+		if instr(line_buff, 0, WRITE_ORIGINALFILENAME) >= 0 {
+			originalfilename = strmid(line_buff, strlen(WRITE_ORIGINALFILENAME), strlen(line_buff) - strlen(WRITE_ORIGINALFILENAME))
+		}
+		if instr(line_buff, 0, WRITE_PRODUCTNAME) >= 0 {
+			productname = strmid(line_buff, strlen(WRITE_PRODUCTNAME), strlen(line_buff) - strlen(WRITE_PRODUCTNAME))
+		}
+		;if instr(line_buff, 0, WRITE_PRODUCTVERSION) >= 0 {
+		;	productversion = strmid(line_buff, strlen(WRITE_PRODUCTVERSION), strlen(line_buff) - strlen(WRITE_PRODUCTVERSION))
+		;}
+	loop
+
+	noteunsel
+
+	;gosub *open_tool_window
+	;gosub *obj_value_set_tool
+	;gosub *make_text
+
+	;gsel BUFFER_MENU, -1
+	;gsel BUFFER_TOOL, 1
 
 	return
 
@@ -908,6 +1001,7 @@
 	objprm obj_id(OBJ_ID_PRODUCTNAME),			productname
 ;	objprm obj_id(OBJ_ID_PRODUCTVERSION),		productversion
 	objprm obj_id(OBJ_ID_WRITE_FOLDER),			tab_id_file_path
+	objprm obj_id(OBJ_ID_PUT_TEXT),				put_text_buff
 
 	return
 
