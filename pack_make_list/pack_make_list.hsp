@@ -2,7 +2,7 @@
 
 ;--------------------------------------------------------------------------------------
 ;
-;	#packリスト作成ツール ver 2.5
+;	#packリスト作成ツール ver 2.6
 ;
 ;	By. しまくろねこ
 ;
@@ -29,7 +29,7 @@
 #const WINDOW_HEIGHT				620									; ウィンドウの縦サイズ
 
 #define APPLICATION_TITLE			"#packリスト作成ツール"
-#define APPLICATION_VERSION			"2.5"
+#define APPLICATION_VERSION			"2.6"
 
 #define CONFIG_FILE_NAME			"pack_make_list_dat.ini"			; 設定ファイル
 
@@ -1158,6 +1158,9 @@
 
 		if win_pos_x < 0 : win_pos_x = 0
 		if win_pos_y < 0 : win_pos_y = 0
+
+		if win_pos_x > ginfo_dispx : win_pos_x = 0
+		if win_pos_y > ginfo_dispy : win_pos_y = 0
 
 		noteunsel
 	}
