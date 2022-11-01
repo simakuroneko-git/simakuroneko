@@ -2,7 +2,7 @@
 
 ;--------------------------------------------------------------------------------------
 ;
-;	#packoptリスト作成ツール ver 0.8
+;	#packoptリスト作成ツール ver 0.9
 ;
 ;	By. しまくろねこ
 ;
@@ -95,7 +95,7 @@
 #const OBJ_ID_WRITE_FILE_NAME			36
 
 #define APP_TITLE_MAIN					"#packoptリスト作成ツール"
-#define APP_VERSION						"0.8"
+#define APP_VERSION						"0.9"
 
 #const SCREEN_MAIN_WIDTH				440
 #const SCREEN_MAIN_HEIGHT				600
@@ -445,6 +445,9 @@
 
 		if win_pos_x < 0 : win_pos_x = 0
 		if win_pos_y < 0 : win_pos_y = 0
+
+		if win_pos_x > ginfo_dispx : win_pos_x = 0
+		if win_pos_y > ginfo_dispy : win_pos_y = 0
 
 		noteunsel
 	}
