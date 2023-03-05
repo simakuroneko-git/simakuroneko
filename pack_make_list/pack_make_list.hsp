@@ -2,7 +2,7 @@
 
 ;--------------------------------------------------------------------------------------
 ;
-;	#packリスト作成ツール ver 2.7
+;	#packリスト作成ツール ver 2.6
 ;
 ;	By. しまくろねこ
 ;
@@ -28,8 +28,8 @@
 #const WINDOW_WIDTH					640									; ウィンドウの横サイズ
 #const WINDOW_HEIGHT				620									; ウィンドウの縦サイズ
 
-#define APPLICATION_TITLE			"#packdirリスト作成ツール"
-#define APPLICATION_VERSION			"2.7"
+#define APPLICATION_TITLE			"#packリスト作成ツール"
+#define APPLICATION_VERSION			"2.6"
 
 #define CONFIG_FILE_NAME			"pack_make_list_dat.ini"			; 設定ファイル
 
@@ -52,9 +52,6 @@
 #define CONFIG_DPM_FILE_NAME		"#dpm_file_name"		+ "\t"		; 設定ファイル内(DPMファイル名)
 #define CONFIG_DPM_FILE_EXIST		"#dpm_file_exist"		+ "\t"		; 設定ファイル内(ファイルの有無を調べる)
 #define CONFIG_DPM_FOLDER_OPEN		"#dpm_folder_open"		+ "\t"		; 設定ファイル内(作成後フォルダを開く)
-
-#define PACK_DIR					"#packdir "
-#define EPACK_DIR					"#epackdir "
 
 #const global FALSE					0
 #const global TRUE					1
@@ -340,8 +337,8 @@
 
 	y += 15
 	objsize 100, 24
-	pos 140, y : mes "#packdir/#epackdir選択"
-	pos 290, y - 5 : combox pack_index(0), 0, "#packdir\n#epackdir"		: obj_id(OBJ_ID_PACK_MODE)			= stat : objprm obj_id(OBJ_ID_PACK_MODE), pack_index(0)
+	pos 140, y : mes "#pack/#epack選択"
+	pos 270, y - 5 : combox pack_index(0), 0, "#pack\n#epack"			: obj_id(OBJ_ID_PACK_MODE)			= stat : objprm obj_id(OBJ_ID_PACK_MODE), pack_index(0)
 	objsize 140, 24
 	pos 490, y - 5 : button gosub "設定保存", *setting_update			: obj_id(OBJ_ID_SETTING_UPDATE)		= stat
 
@@ -955,8 +952,8 @@
 			re_buff		= ""
 
 			switch pack_index
-			case 0 : pack_str  = PACK_DIR	: swbreak
-			case 1 : pack_str  = EPACK_DIR	: swbreak
+			case 0 : pack_str  = "#pack "	: swbreak
+			case 1 : pack_str  = "#epack "	: swbreak
 			swend
 
 			notesel copy_buff
