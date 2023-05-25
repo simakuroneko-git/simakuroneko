@@ -2,7 +2,7 @@
 
 ;--------------------------------------------------------------------------------------
 ;
-;	#packdirリスト作成ツール ver 2.7
+;	#packdirリスト作成ツール ver 2.8
 ;
 ;	By. しまくろねこ
 ;
@@ -29,7 +29,7 @@
 #const WINDOW_HEIGHT				620									; ウィンドウの縦サイズ
 
 #define APPLICATION_TITLE			"#packdirリスト作成ツール"
-#define APPLICATION_VERSION			"2.7"
+#define APPLICATION_VERSION			"2.8"
 
 #define CONFIG_FILE_NAME			"pack_make_list_dat.ini"			; 設定ファイル
 
@@ -1470,8 +1470,8 @@
 
 		pack_buff = mesbox_kakuchoushi
 
-		strrep pack_buff, "#pack ", ""
-		strrep pack_buff, "#epack ", ""
+		strrep pack_buff, PACK_DIR, ""
+		strrep pack_buff, EPACK_DIR, ""
 		strrep pack_buff, "\"", ""
 
 		notesel pack_buff
