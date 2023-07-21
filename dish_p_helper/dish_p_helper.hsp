@@ -2,7 +2,7 @@
 ;
 ; Dish P Helper
 ;
-; Ver 2.7
+; Ver 2.8
 ;
 ; HSP3Dish Helper用 プロジェクト補助アプリケーション
 ;
@@ -15,7 +15,7 @@
 #packopt type 		0
 #packopt icon		"icon.ico"
 #packopt xsize 		640
-#packopt ysize 		480
+#packopt ysize 		500
 #packopt hide		1
 #packopt orgpath	1
 
@@ -30,10 +30,10 @@
 
 ;-----------------------------------------------------------------------
 #const WINDOW_WIDTH								640
-#const WINDOW_HEIGHT							480
+#const WINDOW_HEIGHT							500
 
 #define APPLICATION_TITLE						"Dish P Helper"
-#define APPLICATION_VER							"2.7"
+#define APPLICATION_VER							"2.8"
 
 #define CONFIG_FILE_NAME						"dish_p_helper_dat.ini"
 #define CONFIG_WINDOW_POS_X						"#window_pos_x" + "\t"
@@ -77,20 +77,24 @@
 #const POS_Y_HGIO_SCALE_HEIGHT					10
 #const POS_X_HGIO_AUTOSCALE						11
 #const POS_Y_HGIO_AUTOSCALE						11
-#const POS_X_HSP3DISH_INI						12
-#const POS_Y_HSP3DISH_INI						12
-#const POS_X_RES_VALUES							13
-#const POS_Y_RES_VALUES							13
-#const POS_X_RES_VALUES_JA						14
-#const POS_Y_RES_VALUES_JA						14
-#const POS_X_INPUT_CHECK						15
-#const POS_Y_INPUT_CHECK						15
-#const POS_X_TEKIYOU							16
-#const POS_Y_TEKIYOU							16
-#const POS_X_APPLICATION_ID_1					17
-#const POS_Y_APPLICATION_ID_1					17
-#const POS_X_APPLICATION_ID_2					18
-#const POS_Y_APPLICATION_ID_2					18
+
+#const POS_X_HGIO_UVFIX							12
+#const POS_Y_HGIO_UVFIX							12
+
+#const POS_X_HSP3DISH_INI						13
+#const POS_Y_HSP3DISH_INI						13
+#const POS_X_RES_VALUES							14
+#const POS_Y_RES_VALUES							14
+#const POS_X_RES_VALUES_JA						15
+#const POS_Y_RES_VALUES_JA						15
+#const POS_X_INPUT_CHECK						16
+#const POS_Y_INPUT_CHECK						16
+#const POS_X_TEKIYOU							17
+#const POS_Y_TEKIYOU							17
+#const POS_X_APPLICATION_ID_1					18
+#const POS_Y_APPLICATION_ID_1					18
+#const POS_X_APPLICATION_ID_2					19
+#const POS_Y_APPLICATION_ID_2					19
 
 #define HSP3DISH_INI							"hsp3dish.ini"
 
@@ -138,10 +142,13 @@
 #define	COMMAND_LINE_HGV						"-hgv"
 #define	COMMAND_LINE_HGS						"-hgs"
 #define	COMMAND_LINE_HGA						"-hga"
+
+#define	COMMAND_LINE_HGU						"-hgu"
+
 #define	COMMAND_LINE_APE						"-ape"
 #define	COMMAND_LINE_APJ						"-apj"
 
-#define COMMAND_LINE_P							"-p"
+#define COMMAND_LINE_P							"-project"
 
 #const global FALSE								0
 #const global TRUE								1
@@ -658,11 +665,14 @@
 	pos_x(POS_X_HGIO_AUTOSCALE)		= x_left
 	pos_y(POS_Y_HGIO_AUTOSCALE)		= pos_y(POS_Y_HGIO_SCALE_HEIGHT) + OBJECT_SPAN
 
+	pos_x(POS_X_HGIO_UVFIX)			= x_left
+	pos_y(POS_Y_HGIO_UVFIX)			= pos_y(POS_Y_HGIO_AUTOSCALE) + OBJECT_SPAN
+
 	pos_x(POS_X_HSP3DISH_INI)		= x_left
-	pos_y(POS_X_HSP3DISH_INI)		= pos_y(POS_Y_HGIO_VIEW_WIDTH)
+	pos_y(POS_X_HSP3DISH_INI)		= pos_y(POS_Y_HGIO_VIEW_HEIGHT)
 
 	pos_x(POS_X_RES_VALUES)			= x_left
-	pos_y(POS_Y_RES_VALUES)			= pos_y(POS_Y_HGIO_AUTOSCALE) + (OBJECT_SPAN * 2)
+	pos_y(POS_Y_RES_VALUES)			= pos_y(POS_Y_HGIO_AUTOSCALE) + (OBJECT_SPAN * 3)
 
 	pos_x(POS_X_RES_VALUES_JA)		= x_left
 	pos_y(POS_Y_RES_VALUES_JA)		= pos_y(POS_Y_RES_VALUES) + OBJECT_SPAN
@@ -713,6 +723,10 @@
 	hgio_autoscale_index			= 0
 	hgio_autoscale_value_item		= "0:(画面全体に収まる最適な大きさ(縦横比は維持))\n1:(X方向のサイズを基準に拡大縮小(縦横比は維持))\n2:(Y方向のサイズを基準に拡大縮小(縦横比は維持))\n3:(縦横比は無視して画面全体に表示)"
 	hgio_autoscale_value_index		= 0
+
+	hgio_uvfix_item					= "0:テクスチャを拡大し隣がブレンドされてしまう現象を補正しない\n1:テクスチャを拡大し隣がブレンドされてしまう現象を補正する"
+	hgio_uvfix_index				= 0
+
 	res_values						= ""
 	res_values_ja_item				= "使用しない\n使用する"
 	res_values_ja_index				= 0
@@ -772,6 +786,11 @@
 	objsize 310, 120
 	pos pos_x(POS_X_HGIO_AUTOSCALE)		+ 300,	pos_y(POS_Y_HGIO_AUTOSCALE)	 	- 3	: combox hgio_autoscale_value_index, 120, hgio_autoscale_value_item	: obj_id_hgio_autoscale		= stat
 
+	; テクスチャ補正
+	objsize 420, 120 : objmode 2
+	pos pos_x(POS_X_HGIO_UVFIX)			+ 190,	pos_y(POS_Y_HGIO_UVFIX)			- 3	: combox hgio_uvfix_index, 120, hgio_uvfix_item						: obj_id_hgio_uvfix			= stat
+
+	; hsp3dish.ini出力
 	objsize 110, 24
 	pos pos_x(POS_X_HSP3DISH_INI)		+ 500,	pos_y(POS_X_HSP3DISH_INI)	 	- 3	: button gosub "hsp3dish.ini出力", *hsp3dish_ini_write				: obj_id_hsp3dish_ini_write	= stat
 
@@ -854,6 +873,8 @@
 	hgio_scale_height				= ""
 	hgio_autoscale_index			= 0
 	hgio_autoscale_value_index		= 0
+	hgio_uvfix_index				= 0
+
 	res_values						= ""
 	res_values_ja_index				= 0
 	res_values_ja					= ""
@@ -977,6 +998,10 @@
 	objprm obj_id_hgio_autoscale_e, hgio_autoscale_index
 	objprm obj_id_hgio_autoscale, hgio_autoscale_value_index
 
+	hgio_uvfix_all			= ""
+	func_get_main_c_info@local_mod main_c, "//", "hgio_uvfix", hgio_uvfix_index, hgio_uvfix_index, dummy, hgio_uvfix_all, FALSE
+	objprm obj_id_hgio_uvfix, hgio_uvfix_index
+
 	res_values_all			= ""
 	res_values				= cfunc_get_strings_xml_tag_info@local_mod(strings_xml, res_values_all)
 	objprm obj_id_res_values, res_values
@@ -1001,8 +1026,8 @@
 
 	func_line@local_mod x_left, 55, WINDOW_WIDTH - x_left, 55
 	func_line@local_mod x_left, 155, WINDOW_WIDTH - x_left, 155
-	func_line@local_mod x_left, 285, WINDOW_WIDTH - x_left, 285
-	func_line@local_mod x_left, 365, WINDOW_WIDTH - x_left, 365
+	func_line@local_mod x_left, 310, WINDOW_WIDTH - x_left, 310
+	func_line@local_mod x_left, 390, WINDOW_WIDTH - x_left, 390
 
 	return
 
@@ -1047,6 +1072,8 @@
 	pos pos_x(POS_X_HGIO_SCALE_HEIGHT)	+ 405,	pos_y(POS_Y_HGIO_SCALE_HEIGHT)	: mes "縦"
 
 	pos pos_x(POS_X_HGIO_AUTOSCALE),			pos_y(POS_X_HGIO_AUTOSCALE)		: mes "自動拡大縮小(hgio_autoscale)"
+
+	pos pos_x(POS_X_HGIO_UVFIX),				pos_y(POS_Y_HGIO_UVFIX)			: mes "テクスチャ補正(hgio_uvfix)"
 
 	pos pos_x(POS_X_RES_VALUES),				pos_y(POS_Y_RES_VALUES)			: mes "アプリ名(英語)"
 	pos pos_x(POS_X_RES_VALUES_JA),				pos_y(POS_Y_RES_VALUES_JA)		: mes "アプリ名(日本語)"
@@ -1211,6 +1238,37 @@
 		if hgio_autoscale_index == 0 : v += "//"
 		v += "hgio_autoscale( " + hgio_autoscale_value_index + " )"
 		strrep copy_buff, hgio_autoscale_all, v
+
+		notesel copy_buff
+		repeat notemax
+			line_buff = ""
+			noteget line_buff, cnt
+			if instr(line_buff, 0, v) >= 0 {
+				v2 = ""
+				if hgio_uvfix_index == 1 {
+					strrep_stat = 0
+					if strlen(hgio_uvfix_all) > 0 {
+						v2 += "hgio_uvfix( " + hgio_uvfix_index + " );"
+						strrep copy_buff, hgio_uvfix_all, v2
+						strrep_stat = stat
+						v2 = ""
+					}
+					if strrep_stat == 0 {
+						v2 += "\t\t\t\t"
+						v2 += "hgio_uvfix( " + hgio_uvfix_index + " );"
+						noteadd v2, cnt + 1, 0
+						break
+					}
+				}
+			}
+			if hgio_uvfix_index == 0 {
+				if instr(line_buff, 0, "hgio_uvfix") >= 0 {
+					notedel cnt
+					break
+				}
+			}
+		loop
+
 
 		sjis2utf8n utf8_buff, copy_buff
 
@@ -1434,6 +1492,7 @@
 	cmd_line_vn			= ""
 	cmd_line_msdk		= ""
 	cmd_line_tsdk		= ""
+	cmd_line_pack		= ""
 	cmd_line_scr		= ""
 	cmd_line_hgv		= ""
 	cmd_line_hgv_width	= ""
@@ -1442,6 +1501,7 @@
 	cmd_line_hgs_width	= ""
 	cmd_line_hgs_height	= ""
 	cmd_line_hga		= ""
+	cmd_line_hgu		= ""
 	cmd_line_ape		= ""
 	cmd_line_apj		= ""
 
@@ -1493,6 +1553,9 @@
 			case COMMAND_LINE_HGA								;"-hga/"
 				cmd_line_flg	= TRUE
 				cmd_line_hga	= cmd_line_name(1) : swbreak
+			case COMMAND_LINE_HGU								;"-hgu/"
+				cmd_line_flg	= TRUE
+				cmd_line_hgu	= cmd_line_name(1) : swbreak
 			case COMMAND_LINE_APE								;"-ape/"
 				cmd_line_flg	= TRUE
 				cmd_line_ape	= cmd_line_name(1) : swbreak
@@ -1534,6 +1597,21 @@
 ;-----------------------------------------------------------------------
 *command_line_value_set
 
+	version_code				= ""
+	version_name				= ""
+	min_sdk_version				= ""
+	target_sdk_version			= ""
+	application_id				= ""
+	screen_orientation_index	= 0
+	hgio_view_width				= ""
+	hgio_view_height			= ""
+	hgio_scale_width			= ""
+	hgio_scale_height			= ""
+	hgio_autoscale_value_index	= 0
+	hgio_uvfix_item				= 0
+	res_values					= ""
+	res_values_ja				= ""
+
 	if strlen(cmd_line_vc) > 0			: version_code					= cmd_line_vc
 	if strlen(cmd_line_vn) > 0			: version_name					= cmd_line_vn
 	if strlen(cmd_line_msdk) > 0		: min_sdk_version				= cmd_line_msdk
@@ -1545,6 +1623,7 @@
 	if strlen(cmd_line_hgs_width) > 0	: hgio_scale_width				= cmd_line_hgs_width	: hgio_scale_index		= 1
 	if strlen(cmd_line_hgs_height) > 0	: hgio_scale_height				= cmd_line_hgs_height	: hgio_scale_index		= 1
 	if strlen(cmd_line_hga) > 0			: hgio_autoscale_value_index	= int(cmd_line_hga)		: hgio_autoscale_index	= 1
+	if strlen(cmd_line_hgu) > 0			: hgio_uvfix_item				= int(cmd_line_hgu)		: hgio_uvfix_index		= 1
 	if strlen(cmd_line_ape) > 0			: res_values					= cmd_line_ape
 	if strlen(cmd_line_apj) > 0			: res_values_ja					= cmd_line_apj			: res_values_ja_index	= 1
 
@@ -1596,6 +1675,7 @@
 	objenable obj_id_hgio_scale_height, obj_enable_flg
 	objenable obj_id_hgio_autoscale_e, obj_enable_flg
 	objenable obj_id_hgio_autoscale, obj_enable_flg
+	objenable obj_id_hgio_uvfix, obj_enable_flg
 	objenable obj_id_hsp3dish_ini_write, obj_enable_flg
 
 	return
