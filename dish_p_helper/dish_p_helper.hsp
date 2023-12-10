@@ -2,7 +2,7 @@
 ;
 ; Dish P Helper
 ;
-; Ver 2.9
+; Ver 2.8
 ;
 ; HSP3Dish Helper用 プロジェクト補助アプリケーション
 ;
@@ -20,7 +20,6 @@
 #packopt orgpath	1
 
 
-#include "kernel32.as"
 #include "hspext.as"
 #include "encode.as"
 #include "shell32.as"
@@ -34,7 +33,7 @@
 #const WINDOW_HEIGHT							500
 
 #define APPLICATION_TITLE						"Dish P Helper"
-#define APPLICATION_VER							"2.9"
+#define APPLICATION_VER							"2.8"
 
 #define CONFIG_FILE_NAME						"dish_p_helper_dat.ini"
 #define CONFIG_WINDOW_POS_X						"#window_pos_x" + "\t"
@@ -42,9 +41,6 @@
 
 #define PROJECT_MODE_HSP3DISH					"HSP3Dish"
 #define PROJECT_MODE_HGIMG4						"HGIMG4"
-
-#const LOCALE_JAPAN								0
-#const LOCALE_ENGLISH							1
 
 #const FILE_NAME_MAX							9
 #const FILE_NAME_INDEX_ANDROID_MANIFEST_XML		0
@@ -504,26 +500,10 @@
 	return
 
 #global
-
-;-----------------------------------------------------------------------
-*get_locale
-
-	sdim lpLCData
-
-	locale_mode = LOCALE_JAPAN
-
-	GetLocaleInfo $800, $1, varptr(lpLCData), 64
-
-	if lpLCData == "0411" {
-		locale_mode = LOCALE_JAPAN
-	} else {
-		locale_mode = LOCALE_ENGLISH
-	}
-
 ;***********************************************************************
 
-	current_dir				= dir_cur
-
+	current_dir = dir_cur
+	
 	title APPLICATION_TITLE + " - Ver " + APPLICATION_VER
 	gosub *config_file_read
 	gosub *screen_init
@@ -535,6 +515,7 @@
 	gosub *object_info_set
 
 	onexit goto *config_file_write
+
 
 *main_lutin
 
@@ -549,7 +530,7 @@
 	wait 1
 
 	goto *main_lutin
-
+	
 	end
 
 ;-----------------------------------------------------------------------
@@ -691,54 +672,28 @@
 	target_sdk_version				= ""
 	application_id					= ""
 
-	; ロケール
-	switch locale_mode
-	case LOCALE_JAPAN	; 日本語
-		screen_orientation_item			= "portrait:(縦)\nlandscape:(横)"
-		screen_orientation_index		= 0
-		hgio_view_item					= "使用しない\n使用する"
-		hgio_view_index					= 0
-		hgio_view_width					= "800"
-		hgio_view_height				= "480"
-		hgio_scale_item					= "使用しない\n使用する"
-		hgio_scale_index				= 0
-		hgio_scale_width				= "1.0f"
-		hgio_scale_height				= "1.0f"
-		hgio_autoscale_item				= "使用しない\n使用する"
-		hgio_autoscale_index			= 0
-		hgio_autoscale_value_item		= "0:(画面全体に収まる最適な大きさ(縦横比は維持))\n1:(X方向のサイズを基準に拡大縮小(縦横比は維持))\n2:(Y方向のサイズを基準に拡大縮小(縦横比は維持))\n3:(縦横比は無視して画面全体に表示)"
-		hgio_autoscale_value_index		= 0
+	screen_orientation_item			= "portrait:(縦)\nlandscape:(横)"
+	screen_orientation_index		= 0
+	hgio_view_item					= "使用しない\n使用する"
+	hgio_view_index					= 0
+	hgio_view_width					= "800"
+	hgio_view_height				= "480"
+	hgio_scale_item					= "使用しない\n使用する"
+	hgio_scale_index				= 0
+	hgio_scale_width				= "1.0f"
+	hgio_scale_height				= "1.0f"
+	hgio_autoscale_item				= "使用しない\n使用する"
+	hgio_autoscale_index			= 0
+	hgio_autoscale_value_item		= "0:(画面全体に収まる最適な大きさ(縦横比は維持))\n1:(X方向のサイズを基準に拡大縮小(縦横比は維持))\n2:(Y方向のサイズを基準に拡大縮小(縦横比は維持))\n3:(縦横比は無視して画面全体に表示)"
+	hgio_autoscale_value_index		= 0
 
-		hgio_uvfix_item					= "0:テクスチャを拡大し隣がブレンドされてしまう現象を補正しない\n1:テクスチャを拡大し隣がブレンドされてしまう現象を補正する"
-		hgio_uvfix_index				= 0
+	hgio_uvfix_item					= "0:テクスチャを拡大し隣がブレンドされてしまう現象を補正しない\n1:テクスチャを拡大し隣がブレンドされてしまう現象を補正する"
+	hgio_uvfix_index				= 0
 
-		res_values						= ""
-		res_values_ja_item				= "使用しない\n使用する"
-		res_values_ja_index				= 0
-		res_values_ja					= ""
-		swbreak
-	case LOCALE_ENGLISH	; 英語
-		screen_orientation_item			= "portrait\nlandscape"
-		screen_orientation_index		= 0
-		hgio_view_item					= "not use\nuse"
-		hgio_view_index					= 0
-		hgio_view_width					= "800"
-		hgio_view_height				= "480"
-		hgio_scale_item					= "not use\nuse"
-		hgio_scale_index				= 0
-		hgio_scale_width				= "1.0f"
-		hgio_scale_height				= "1.0f"
-		hgio_autoscale_item				= "not use\nuse"
-		hgio_autoscale_index			= 0
-		hgio_autoscale_value_item		= "0:Maintain aspect ratio type 1\n1:Maintain aspect ratio type 2\n2:Maintain aspect ratio type 3\n3:ignore aspect ratio"
-		hgio_autoscale_value_index		= 0
-
-		hgio_uvfix_item					= "0:No texture blend correction\n1:Correct texture blend"
-		hgio_uvfix_index				= 0
-
-		res_values						= ""
-		swbreak
-	swend
+	res_values						= ""
+	res_values_ja_item				= "使用しない\n使用する"
+	res_values_ja_index				= 0
+	res_values_ja					= ""
 
 	; ダミー
 	dummy							= 0
@@ -800,38 +755,22 @@
 
 	; hsp3dish.ini出力
 	objsize 110, 24
-	pos pos_x(POS_X_HSP3DISH_INI)		+ 500,	pos_y(POS_X_HSP3DISH_INI)	 	- 3	: button gosub "hsp3dish.ini-out", *hsp3dish_ini_write				: obj_id_hsp3dish_ini_write	= stat
+	pos pos_x(POS_X_HSP3DISH_INI)		+ 500,	pos_y(POS_X_HSP3DISH_INI)	 	- 3	: button gosub "hsp3dish.ini出力", *hsp3dish_ini_write				: obj_id_hsp3dish_ini_write	= stat
 
 
 	; アプリ名
 	pos pos_x(POS_X_RES_VALUES)			+ 190,	pos_y(POS_Y_RES_VALUES)			- 3	: input res_values, 305, TEXTBOX_HEIGHT, 128						: obj_id_res_values			= stat
-	if locale_mode == LOCALE_JAPAN {
-		objsize 100, 120 : objmode 2
-		pos pos_x(POS_X_RES_VALUES_JA)		+ 190,	pos_y(POS_Y_RES_VALUES_JA)		- 3	: combox res_values_ja_index, 120, res_values_ja_item				: obj_id_res_values_ja_e	= stat
-		pos pos_x(POS_X_RES_VALUES_JA)		+ 300,	pos_y(POS_Y_RES_VALUES_JA)		- 3	: input res_values_ja, 305, TEXTBOX_HEIGHT, 128						: obj_id_res_values_ja		= stat
-	}
+	objsize 100, 120 : objmode 2
+	pos pos_x(POS_X_RES_VALUES_JA)		+ 190,	pos_y(POS_Y_RES_VALUES_JA)		- 3	: combox res_values_ja_index, 120, res_values_ja_item				: obj_id_res_values_ja_e	= stat
+	pos pos_x(POS_X_RES_VALUES_JA)		+ 300,	pos_y(POS_Y_RES_VALUES_JA)		- 3	: input res_values_ja, 305, TEXTBOX_HEIGHT, 128						: obj_id_res_values_ja		= stat
 
 	; 未入力をチェック
-	put_str = ""
-	if locale_mode == LOCALE_JAPAN {
-		put_str = "未入力をチェック"
-	}
-	if locale_mode == LOCALE_ENGLISH {
-		put_str = "check for blank"
-	}
 	objsize 125, 24
-	pos pos_x(POS_X_INPUT_CHECK)		+ 480,	pos_y(POS_Y_INPUT_CHECK)			: input_check = 1 : chkbox put_str, input_check			: obj_id_input_check		= stat
+	pos pos_x(POS_X_INPUT_CHECK)		+ 480,	pos_y(POS_Y_INPUT_CHECK)			: input_check = 1 : chkbox "未入力をチェック", input_check			: obj_id_input_check		= stat
 
 	; 適用
-	put_str = ""
-	if locale_mode == LOCALE_JAPAN {
-		put_str = "適用"
-	}
-	if locale_mode == LOCALE_ENGLISH {
-		put_str = "execution"
-	}
 	objsize 125, 50
-	pos pos_x(POS_X_TEKIYOU)			+ 480,	pos_y(POS_Y_TEKIYOU)			- 3	: button gosub put_str, *tekiyou										: obj_id_tekiyou			= stat
+	pos pos_x(POS_X_TEKIYOU)			+ 480,	pos_y(POS_Y_TEKIYOU)			- 3	: button gosub "適用", *tekiyou										: obj_id_tekiyou			= stat
 
 	objsel obj_id_project
 
@@ -844,17 +783,7 @@
 	android_name = cfunc_get_hsp3dh_cfg@local_mod(hsp3dh_cfg_buff, CFG_AND_NAME)
 
 	if strlen(project_path) == 0 {
-		put_str = ""
-		put_str_title = ""
-		if locale_mode == LOCALE_JAPAN {
-			put_str = "HSP3Dish helperにてプロジェクトフォルダが設定されていません。\n終了します。"
-			put_str_title = "プロジェクトフォルダ未設定"
-		}
-		if locale_mode == LOCALE_ENGLISH {
-			put_str = "The project folder is not set in HSP3Dish helper. Exit."
-			put_str_title = "Project folder not set"
-		}
-		dialog put_str, 1, put_str_title
+		dialog "HSP3Dish helperにてプロジェクトフォルダが設定されていません。\n終了します。", 1, "プロジェクトフォルダ未設定"
 		end
 	}
 
@@ -868,7 +797,6 @@
 	repeat notemax
 		get_line = ""
 		noteget get_line, cnt
-
 		if get_line == android_name {
 			objprm obj_id_project, cnt
 			break
@@ -1037,14 +965,12 @@
 	res_values				= cfunc_get_strings_xml_tag_info@local_mod(strings_xml, res_values_all)
 	objprm obj_id_res_values, res_values
 
-	if locale_mode == LOCALE_JAPAN {
-		res_values_ja_all		= ""
-		res_values_ja			= cfunc_get_strings_xml_tag_info@local_mod(strings_xml_ja, res_values_ja_all)
-		objprm obj_id_res_values_ja, res_values_ja
+	res_values_ja_all		= ""
+	res_values_ja			= cfunc_get_strings_xml_tag_info@local_mod(strings_xml_ja, res_values_ja_all)
+	objprm obj_id_res_values_ja, res_values_ja
 
-		if strlen(res_values_ja) > 0 : res_values_ja_index = 1
-		objprm obj_id_res_values_ja_e, res_values_ja_index
-	}
+	if strlen(res_values_ja) > 0 : res_values_ja_index = 1
+	objprm obj_id_res_values_ja_e, res_values_ja_index
 
 	return
 
@@ -1097,27 +1023,19 @@
 	pos pos_x(POS_X_SCREEN_ORIENTATION),		pos_y(POS_Y_SCREEN_ORIENTATION)	: mes "画面の向き(screenOrientation)"
 
 	pos pos_x(POS_X_HGIO_VIEW_WIDTH),			pos_y(POS_Y_HGIO_VIEW_WIDTH)	: mes "画面サイズ(hgio_view)"
-	pos pos_x(POS_X_HGIO_VIEW_WIDTH)	+ 300, 	pos_y(POS_Y_HGIO_VIEW_WIDTH)	: mes "横W"
-	pos pos_x(POS_X_HGIO_VIEW_HEIGHT)	+ 405,	pos_y(POS_Y_HGIO_VIEW_HEIGHT)	: mes "縦H"
+	pos pos_x(POS_X_HGIO_VIEW_WIDTH)	+ 300, 	pos_y(POS_Y_HGIO_VIEW_WIDTH)	: mes "横"
+	pos pos_x(POS_X_HGIO_VIEW_HEIGHT)	+ 405,	pos_y(POS_Y_HGIO_VIEW_HEIGHT)	: mes "縦"
 
 	pos pos_x(POS_X_HGIO_SCALE_WIDTH),			pos_y(POS_Y_HGIO_SCALE_WIDTH)	: mes "画面表示倍率(hgio_scale)"
-	pos pos_x(POS_X_HGIO_SCALE_WIDTH)	+ 300,	pos_y(POS_Y_HGIO_SCALE_WIDTH)	: mes "横W"
-	pos pos_x(POS_X_HGIO_SCALE_HEIGHT)	+ 405,	pos_y(POS_Y_HGIO_SCALE_HEIGHT)	: mes "縦H"
+	pos pos_x(POS_X_HGIO_SCALE_WIDTH)	+ 300,	pos_y(POS_Y_HGIO_SCALE_WIDTH)	: mes "横"
+	pos pos_x(POS_X_HGIO_SCALE_HEIGHT)	+ 405,	pos_y(POS_Y_HGIO_SCALE_HEIGHT)	: mes "縦"
 
 	pos pos_x(POS_X_HGIO_AUTOSCALE),			pos_y(POS_X_HGIO_AUTOSCALE)		: mes "自動拡大縮小(hgio_autoscale)"
 
 	pos pos_x(POS_X_HGIO_UVFIX),				pos_y(POS_Y_HGIO_UVFIX)			: mes "テクスチャ補正(hgio_uvfix)"
 
-	pos pos_x(POS_X_RES_VALUES),				pos_y(POS_Y_RES_VALUES)
-	if locale_mode == LOCALE_JAPAN {
-		mes "アプリ名(英語)"
-	} else {
-		mes "アプリ名(App Name English)"
-	}
-	
-	if locale_mode == LOCALE_JAPAN {
-		pos pos_x(POS_X_RES_VALUES_JA),				pos_y(POS_Y_RES_VALUES_JA)		: mes "アプリ名(日本語)"
-	}
+	pos pos_x(POS_X_RES_VALUES),				pos_y(POS_Y_RES_VALUES)			: mes "アプリ名(英語)"
+	pos pos_x(POS_X_RES_VALUES_JA),				pos_y(POS_Y_RES_VALUES_JA)		: mes "アプリ名(日本語)"
 
 	return
 
@@ -1126,19 +1044,11 @@
 *tekiyou
 
 	if strlen(cfunc_get_comboi_item@local_mod(project_item, project_index)) == 0 {
-		if locale_mode == LOCALE_JAPAN {
-			dialog "プロジェクトが選択されていません", 1
-		} else {
-			dialog "No project selected", 1
-		}
+		dialog "プロジェクトが選択されていません", 1
 		return
 	}
 
-	if locale_mode == LOCALE_JAPAN {
-		dialog "変更内容を適用してもよろしいですか？", 2, "適用前の確認"
-	} else {
-		dialog "Are you sure you want to apply the changes?", 2, "confirmation"
-	}
+	dialog "変更内容を適用してもよろしいですか？", 2, "適用前の確認"
 	if stat == 7 {
 		return
 	}
@@ -1146,41 +1056,25 @@
 	if input_check == TRUE {
 		; -------------- 未入力データがないかチェック
 		if strlen(version_code) == 0 {
-			if locale_mode == LOCALE_JAPAN {
-				dialog "『バージョンコード(versionCode)』が未入力です。", 1
-			} else {
-				dialog "(versionCode) not input", 1
-			}
+			dialog "『バージョンコード(versionCode)』が未入力です。", 1
 			objsel obj_id_version_code
 			return
 		}
 
 		if strlen(version_name) == 0 {
-			if locale_mode == LOCALE_JAPAN {
-				dialog "『バージョンネーム(versionName)』が未入力です。", 1
-			} else {
-				dialog "(versionName) not input", 1
-			}
+			dialog "『バージョンネーム(versionName)』が未入力です。", 1
 			objsel obj_id_version_name
 			return
 		}
 
 		if strlen(min_sdk_version) == 0 {
-			if locale_mode == LOCALE_JAPAN {
-				dialog "『最小要求API(minSdk)』が未入力です。", 1
-			} else {
-				dialog "(minSdk) not input", 1
-			}
+			dialog "『最小要求API(minSdk)』が未入力です。", 1
 			objsel obj_id_min_sdk_version
 			return
 		}
 
 		if strlen(target_sdk_version) == 0 {
-			if locale_mode == LOCALE_JAPAN {
-				dialog "『ターゲットSDK(targetSdk)』が未入力です。", 1
-			} else {
-				dialog "(targetSdk) not input", 1
-			}
+			dialog "『ターゲットSDK(targetSdk)』が未入力です。", 1
 			objsel obj_id_target_sdk_version
 			return
 		}
@@ -1188,20 +1082,12 @@
 		if hsp3dish_hgimg4_mode == HSP3DISH_HGIMG4_MODE_DISH {
 			if hgio_view_index == TRUE {
 				if strlen(hgio_view_width) == 0 {
-					if locale_mode == LOCALE_JAPAN {
-						dialog "『画面サイズ(hgio_view)』の『横』が未入力です。", 1
-					} else {
-						dialog "(hgio_view) W not input", 1
-					}
+					dialog "『画面サイズ(hgio_view)』の『横』が未入力です。", 1
 					objsel obj_id_hgio_view_width
 					return
 				}
 				if strlen(hgio_view_height) == 0 {
-					if locale_mode == LOCALE_JAPAN {
-						dialog "『画面サイズ(hgio_view)』の『縦』が未入力です。", 1
-					} else {
-						dialog "(hgio_view) H not input", 1
-					}
+					dialog "『画面サイズ(hgio_view)』の『縦』が未入力です。", 1
 					objsel obj_id_hgio_view_height
 					return
 				}
@@ -1209,20 +1095,12 @@
 
 			if hgio_scale_index == TRUE {
 				if strlen(hgio_scale_width) == 0 {
-					if locale_mode == LOCALE_JAPAN {
-						dialog "『画面表示倍率(hgio_scale)』の『横』が未入力です。", 1
-					} else {
-						dialog "(hgio_scale) W not input", 1
-					}
+					dialog "『画面表示倍率(hgio_scale)』の『横』が未入力です。", 1
 					objsel obj_id_hgio_scale_width
 					return
 				}
 				if strlen(hgio_scale_height) == 0 {
-					if locale_mode == LOCALE_JAPAN {
-						dialog "『画面表示倍率(hgio_scale)』の『縦』が未入力です。", 1
-					} else {
-						dialog "(hgio_scale) H not input", 1
-					}
+					dialog "『画面表示倍率(hgio_scale)』の『縦』が未入力です。", 1
 					objsel obj_id_hgio_scale_height
 					return
 				}
@@ -1230,22 +1108,16 @@
 		}
 
 		if strlen(res_values) == 0 {
-			if locale_mode == LOCALE_JAPAN {
-				dialog "『アプリ名(英語)』が未入力です。", 1
-			} else {
-				dialog "(App Name English) not input", 1
-			}
+			dialog "『アプリ名(英語)』が未入力です。", 1
 			objsel obj_id_res_values
 			return
 		}
 
-		if locale_mode == LOCALE_JAPAN {
-			if res_values_ja_index == TRUE {
-				if strlen(res_values_ja) == 0 {
-					dialog "『アプリ名(日本語)』が未入力です。", 1
-					objsel obj_id_res_values_ja
-					return
-				}
+		if res_values_ja_index == TRUE {
+			if strlen(res_values_ja) == 0 {
+				dialog "『アプリ名(日本語)』が未入力です。", 1
+				objsel obj_id_res_values_ja
+				return
 			}
 		}
 	}
@@ -1279,7 +1151,6 @@
 	if err_flg {
 		return
 	}
-
 
 	objenable obj_id_tekiyou, FALSE
 
@@ -1504,11 +1375,7 @@
 	package = application_id
 	file_name(FILE_NAME_INDEX_MAIN_ACTIVITY_JAVA) = save_file_name
 
-	if locale_mode == LOCALE_JAPAN {
-		dialog "適用完了"
-	} else {
-		dialog "Successful completion"
-	}
+	dialog "適用完了"
 	objenable obj_id_tekiyou, TRUE
 
 	return
@@ -1618,12 +1485,10 @@
 		objenable obj_id_hgio_autoscale, FALSE
 	}
 
-	if locale_mode == LOCALE_JAPAN {
-		if res_values_ja_index == TRUE {
-			objenable obj_id_res_values_ja, TRUE
-		} else {
-			objenable obj_id_res_values_ja, FALSE
-		}
+	if res_values_ja_index == TRUE {
+		objenable obj_id_res_values_ja, TRUE
+	} else {
+		objenable obj_id_res_values_ja, FALSE
 	}
 
 	return
