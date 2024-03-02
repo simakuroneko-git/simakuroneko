@@ -17,7 +17,6 @@ addon
 しまくろねこ
 %inst
 Windows版のDishで有効です
-
 スクリーンのリサイズをします。
 指定された値が実際のディスプレイの解像度以上の場合、スクリーンは縦横の比率を保ったまま自動的に縮小（スケーリング）されます。
 もしくは、自動拡大縮小してディスプレイのサイズに合わせてリサイズします。
@@ -29,7 +28,7 @@ hsp36,hsp37
 完全フリー
 
 %url
-http://www17.plala.or.jp/simakuroneko/u303_index.hspupd
+https://github.com/simakuroneko-git/simakuroneko/blob/main/hsp_package/u303_index.hspupd
 
 
 %index
@@ -62,7 +61,7 @@ hsp36,hsp37
 完全フリー
 
 %url
-http://www17.plala.or.jp/simakuroneko/u303_index.hspupd
+https://github.com/simakuroneko-git/simakuroneko/blob/main/hsp_package/u303_index.hspupd
 
 
 %sha256
