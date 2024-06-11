@@ -2,7 +2,7 @@
 ;
 ; Dish P Helper
 ;
-; Ver 3.0
+; Ver 3.1
 ;
 ; HSP3Dish Helper用 プロジェクト補助アプリケーション
 ;
@@ -34,7 +34,7 @@
 #const WINDOW_HEIGHT							500
 
 #define APPLICATION_TITLE						"Dish P Helper"
-#define APPLICATION_VER							"3.0"
+#define APPLICATION_VER							"3.1"
 
 #define CONFIG_FILE_NAME						"dish_p_helper_dat.ini"
 #define CONFIG_WINDOW_POS_X						"#window_pos_x" + "\t"
@@ -1168,7 +1168,9 @@
 
 	v = "package=\"" + application_id + "\""
 
-	;strrep copy_buff, manifest_xml_package_all, v
+	if strlen(manifest_xml_package_all) > 0 {
+		strrep copy_buff, manifest_xml_package_all, v
+	}
 
 	switch screen_orientation_index
 	case 0 : v = "android:screenOrientation=\"portrait\""  : swbreak
@@ -1312,8 +1314,10 @@
 	utf8_buff = ""
 	copy_buff = build_gradle
 
-	v = "namespace \"" + application_id + "\""
-	strrep copy_buff, namespace_all, v
+	if strlen(namespace_all) > 0 {
+		v = "namespace \"" + application_id + "\""
+		strrep copy_buff, namespace_all, v
+	}
 
 	v = "applicationId \"" + application_id + "\""
 	strrep copy_buff, application_id_all, v
