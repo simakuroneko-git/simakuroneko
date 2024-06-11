@@ -2,7 +2,7 @@
 |
 | Dish P Helper
 |
-| Ver 2.9
+| Ver 3.0
 |
 +----------------------------------------------------------
 |
@@ -36,6 +36,8 @@
     ・最小要求API(minSdk)
 
     ・ターゲットAPI(targetSdk)
+
+    ・ネームスペース(namespace/applicationId)
 
     ・画面の向き(screenOrientation)
 
@@ -80,6 +82,8 @@
 
 
 (6). 履歴
+
+   2024/06/11 (Ver3.0) : ネームスペース(namespace/applicationId)という名の入力箇所を復活。
 
    2024/06/11 (Ver2.9) : パッケージ名(package/applicationId)を削除。アプリ名にUnicodeの絵文字を使用できるようにする。
 

@@ -2,7 +2,7 @@
 ;
 ; Dish P Helper
 ;
-; Ver 2.9
+; Ver 3.0
 ;
 ; HSP3Dish Helper用 プロジェクト補助アプリケーション
 ;
@@ -34,7 +34,7 @@
 #const WINDOW_HEIGHT							500
 
 #define APPLICATION_TITLE						"Dish P Helper"
-#define APPLICATION_VER							"2.9"
+#define APPLICATION_VER							"3.0"
 
 #define CONFIG_FILE_NAME						"dish_p_helper_dat.ini"
 #define CONFIG_WINDOW_POS_X						"#window_pos_x" + "\t"
@@ -729,8 +729,7 @@
 	;pos pos_x(POS_X_PROJECT_TARGET)		+ 190,	pos_y(POS_Y_PROJECT_TARGET)		- 3	: input project_target,	96, TEXTBOX_HEIGHT, 128						: obj_id_project_target		= stat
 	pos pos_x(POS_X_TARGET_SDK_VERSION)	+ 190,	pos_y(POS_X_TARGET_SDK_VERSION)	- 3	: input target_sdk_version, 96, TEXTBOX_HEIGHT, 128					: obj_id_target_sdk_version	= stat
 	; application_Id/パッケージ名
-	obj_id_application_id = 0
-	// pos pos_x(POS_X_APPLICATION_ID_2),			pos_y(POS_Y_APPLICATION_ID_2)	- 3	: input application_id, 285, TEXTBOX_HEIGHT, 128					: obj_id_application_id		= stat
+	pos pos_x(POS_X_APPLICATION_ID_2),			pos_y(POS_Y_APPLICATION_ID_2)	- 3	: input application_id, 285, TEXTBOX_HEIGHT, 128					: obj_id_application_id		= stat
 
 	; 画面の向き
 	objsize 200, 120 : objmode 2
@@ -908,9 +907,12 @@
 	target_sdk_version		= cfunc_get_android_manifest_xml_tag_AND_build_gradle_info@local_mod(build_gradle, "targetSdk", target_sdk_version_all, " ", "", 0)
 	objprm obj_id_target_sdk_version, target_sdk_version
 
+	namespace_all 			= "";namespace "com.simakuroneko.test2"
+	namespace				= cfunc_get_android_manifest_xml_tag_AND_build_gradle_info@local_mod(build_gradle, "namespace", namespace_all, " ", "\"", 1)
+
 	application_id_all 		= "";applicationId "com.simakuroneko.test2"
 	application_id			= cfunc_get_android_manifest_xml_tag_AND_build_gradle_info@local_mod(build_gradle, "applicationId", application_id_all, " ", "\"", 1)
-	// objprm obj_id_application_id, application_id
+	objprm obj_id_application_id, application_id
 
 	manifest_xml_package_all = "";\app\src\main\AndroidManifest.xml
 	manifest_xml_package	= cfunc_get_android_manifest_xml_tag_AND_build_gradle_info@local_mod(android_manifest_xml, "package", manifest_xml_package_all, "=", "\"", 1)
@@ -1022,7 +1024,7 @@
 	pos pos_x(POS_X_MIN_SDK_VERSION),			pos_y(POS_Y_MIN_SDK_VERSION)	: mes "最小要求API(minSdk)"
 	pos pos_x(POS_X_TARGET_SDK_VERSION),		pos_y(POS_Y_TARGET_SDK_VERSION)	: mes "ターゲットAPI(targetSdk)"
 
-	// pos pos_x(POS_X_APPLICATION_ID_1),			pos_y(POS_Y_APPLICATION_ID_1)	: mes "パッケージ名(package/applicationId)"
+	pos pos_x(POS_X_APPLICATION_ID_1),			pos_y(POS_Y_APPLICATION_ID_1)	: mes "ネームスペース(namespace/applicationId)"
 
 	pos pos_x(POS_X_SCREEN_ORIENTATION),		pos_y(POS_Y_SCREEN_ORIENTATION)	: mes "画面の向き(screenOrientation)"
 
@@ -1309,6 +1311,9 @@
 	; -------------- app\build.gradle
 	utf8_buff = ""
 	copy_buff = build_gradle
+
+	v = "namespace \"" + application_id + "\""
+	strrep copy_buff, namespace_all, v
 
 	v = "applicationId \"" + application_id + "\""
 	strrep copy_buff, application_id_all, v
